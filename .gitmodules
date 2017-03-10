@@ -1,0 +1,6 @@
+[submodule "swp"]
+	path = swp
+	url = https://github.com/voldien/swp.git
+[submodule "konachan"]
+	path = konachan
+	url = https://github.com/voldien/konachan.git
