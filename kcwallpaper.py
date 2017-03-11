@@ -27,11 +27,11 @@ import atexit
 
 # Global constant variable.
 VERSION = "0.9.0"
-CONFIG_FIELPATH = os.path.expanduser("~/.kcw/")
+CONFIG_FIELPATH = "/etc/"
 CONFIG_FIELNAME = "kcw.conf"
 DEFAULT_USECACHE = True
 DEFAULT_CACHEDATA = True
-DEFAULT_CACHEFILEDIRECTORY = CONFIG_FIELPATH + "cache/"
+DEFAULT_CACHEFILEDIRECTORY = os.path.expanduser("~/.kcw/cache/")
 DEFAULT_SLEEPTIME = 10.0
 DEFAULT_SEARCHTAG = "cat"
 DEFAULT_USE_MYSQL = True
@@ -156,7 +156,7 @@ for k, v in config_table.iteritems():
         verbose_print("Using caching status {}".format(usecache))
     elif k in "cachedir":
         cachedirectory = os.path.expanduser(v)
-        verbose_print("Cache directory set to {}.".format(cachedirectory))
+        verbose_print("Cache directory set to {}".format(cachedirectory))
     elif k is "flag":
         flag = v
         verbose_print("flag : {}.".format(flag))
@@ -292,7 +292,8 @@ while isAlive:
     if usecache and sql_check_img_exists(sqlcon, mysql_table, imgid):
         cachefilename = get_sql_cached_img_url_by_id(sqlcon, mysql_table, imgid)
         verbose_print("Using cached file %s.\n" % cachefilename)
-        with open(cachedirectory + cachefilename, 'rb') as fcach:
+        fpath = "%s/%s" % (cachedirectory, cachefilename)
+        with open(fpath, 'rb') as fcach:
             imgdata = fcach.read()
         fcach.close()
     else:
