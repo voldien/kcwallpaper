@@ -233,11 +233,12 @@ except Exception as err:
 if cachedata and not os.path.isdir(cachedirectory):
     verbose_print("Creating cache directory %s." % cachedirectory)
     try:
-        os.makedirs(cachedata)
+        os.makedirs(cachedirectory)
     except OSError as err:
         print(err.message)
         exit(1)
     except Exception as err:
+        print(err.message)
         exit(1)
 
 # Create mysql connection and connect. (Optional)
