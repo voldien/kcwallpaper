@@ -37,7 +37,7 @@ DEFAULT_SEARCHTAG = "cat"
 DEFAULT_USE_MYSQL = True
 DEFAULT_MYSQL_PORT = 3389
 DEFAULT_MYSQL_HOSTNAME = "localhost"
-DEFAULT_MYSQL_USERNAME = "readimg"
+DEFAULT_MYSQL_USERNAME = "kcwadmin"
 DEFAULT_MYSQL_PASSWORD = "randompass"
 DEFAULT_MYSQL_DATABASE = "konachan"
 
@@ -215,7 +215,8 @@ for o, a in opts:
         lst = os.listdir(cachedirectory)
         for l in lst:
             verbose_print("Removing file from cache directory %s.\n" % l)
-            os.remove(cachedirectory + "/" + l)
+            fpath = "%s/%s" % (cachedirectory, l)
+            os.remove(fpath)
         quit(0)
 
 # Create wallpaper process for display pictures.
@@ -292,11 +293,14 @@ while isAlive:
     # Check if image exists and cache is enabled.
     if usecache and sql_check_img_exists(sqlcon, mysql_table, imgid):
         cachefilename = get_sql_cached_img_url_by_id(sqlcon, mysql_table, imgid)
-        verbose_print("Using cached file %s.\n" % cachefilename)
         fpath = "%s/%s" % (cachedirectory, cachefilename)
-        with open(fpath, 'rb') as fcach:
-            imgdata = fcach.read()
-        fcach.close()
+        verbose_print("Using cached file %s.\n" % fpath)
+        try:
+            with open(fpath, 'rb') as fcach:
+                imgdata = fcach.read()
+            fcach.close()
+        except Exception as err:
+            print(err.message)
     else:
         if hasInternet:
             try:
@@ -318,7 +322,8 @@ while isAlive:
             # Cache image if caching is enabled and sql connection exists.
             if cachedata and sqlcon:
                 verbose_print("Caching downloaded image data to %s as %s.\n" % (cachedirectory, basename))
-                cachef = open(cachedirectory + basename, 'wb')
+		fpath = "%s/%s" % (cachedirectory, basename)
+                cachef = open(fpath, 'wb')
                 cachef.write(imgdata)
                 cachef.close()
                 # Add image and its attributes to database.
