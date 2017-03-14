@@ -33,5 +33,6 @@ CREATE TABLE IF NOT EXISTS `img` (
 
 #	Create user to read the img table.
 CREATE USER 'kcwadmin'@'%';							#
+SET PASSWORD for 'kcwadmin'@'localhost' = PASSWORD("randompass");		#
 GRANT SELECT,INSERT,ALTER,DELETE on konachan.img to 'kcwadmin'@'localhost'	#
 
