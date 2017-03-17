@@ -5,6 +5,7 @@ RM := rm -f
 CP := cp
 MKDIR := mkdir -p
 CHMOD := chmod
+LN := ln
 # Directory paths.
 DESTDIR ?=
 PREFIX ?= /usr
@@ -23,9 +24,9 @@ install :
 	@echo -n "Create MySQL cache server.\n"
 	./sqlinstall.sh
 	$(MKDIR) $(INSTALL_LOCATION)/bin
-	$(CP) $(PYTHONBIN) $(INSTALL_LOCATION)/bin
-	$(CHMOD) +x $(INSTALL_LOCATION)/bin/$(PYTHONBIN)
 	$(CP) *.py $(INSTALL_LOCATION)/lib/$(PYTHONV)
+	$(CHMOD) +x $(INSTALL_LOCATION)/lib/$(PYTHONV)/$(PYTHONBIN)
+	$(LN) -s $(INSTALL_LOCATION)/lib/$(PYTHONV)/$(PYTHONBIN)  $(INSTALL_LOCATION)/bin/$(TARGET)
 	$(MKDIR)  $(INSTALL_ETC_LOCATION)
 	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
 
