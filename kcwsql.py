@@ -15,13 +15,13 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import mysql.connector
-from kcwsimpleparser import *
-
+from kcwverbose import *
 use_mysql = False
 
 
 def is_mysql_enabled():
     return use_mysql
+
 
 # Connect to mysql server.
 def sql_connect(user, password, host, port, database, table):
@@ -30,11 +30,11 @@ def sql_connect(user, password, host, port, database, table):
                                          host=host,
                                          database=database)
         num_cached_entries = sql_num_entries_by_table(sqlcon, table)
-        verbose_print("Connected to mysql server %s:%d.\n" % (host, port))
-        verbose_print("%d number of cached entries.\n" % num_cached_entries)
+        kcw_verbose_print("Connected to mysql server %s:%d.\n" % (host, port))
+        kcw_verbose_print("%d number of cached entries.\n" % num_cached_entries)
         return sqlcon
     except mysql.connector.Error as err:
-        print("Couldn't connect to a mysql server %s:%d %s." % (host,port,err.message))
+        print("Couldn't connect to a mysql server %s:%d %s." % (host, port, err.message))
         print("Caching can not be used without MySQL.")
     except Exception as err:
         print("Couldn't connect to mysql, %s." % err.message)
@@ -48,7 +48,7 @@ def sql_clear_cache(sqlcon, table):
     try:
         cursor = sqlcon.cursor()
         query = "TRUNCATE TABLE konachan.{} ;".format(table)
-        verbose_print("Clearing mysql database.\n")
+        kcw_verbose_print("Clearing mysql database.\n")
         cursor.execute(query)
         sqlcon.commit()
         cursor.close()

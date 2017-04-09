@@ -1,4 +1,4 @@
-# script that parsing simple config syntax.
+# Script that parse simple config syntax.
 # Copyright (C) 2017  Valdemar Lindberg
 #
 # This program is free software: you can redistribute it and/or modify
@@ -14,21 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-verbose = False
-
-
-def kcw_isverobse():
-    return verbose
-
-def enable_verbose():
-    global verbose
-    verbose = True
-
-def verbose_print(formatstr):
-    if verbose is True:
-        print(formatstr)
-
-# Defined syntax.
+# Defined grammar syntax.
 SP_COMMENTS_SYNTAX = "#"
 SP_EQUAL_SYNTAX = "="
 
@@ -38,12 +24,11 @@ def sp_trim_left_right_trim(line):
     return line.replace(" ", "")
 
 
-# Return directory table.
-def sp_parse_file(cfilename):
-    verbose_print("Start parsing file %s" % cfilename)
+# Return directory table and error array.
+def sp_parse_file(cfilepath):
     try:
-        f = open(cfilename, 'r')
-        table, err = sp_extract_grammer(f)
+        f = open(cfilepath, 'r')
+        table, err = sp_extract_grammar(f)
         f.close()
         return table, err
     except IOError as err:
@@ -51,7 +36,7 @@ def sp_parse_file(cfilename):
         return None, None
     except Exception as err:
         print(err.message)
-        quit(1)
+    return None, None
 
 
 # Remove comment from line.
@@ -63,38 +48,47 @@ def sp_remove_comment(line):
         return line[0:com]
 
 
-# Extract grammer rule.
-def sp_extract_grammer(f):
-    # Iterate line per line.
+# Extract grammar rule.
+# return dictionary of each attribute and value.
+def sp_extract_grammar(f):
+
     table = {}
     err = []
-    line = 0
+    linecur = 0
 
+    #
     lines = f.read().splitlines()
-    for cstringdata in lines:
-        statement = sp_remove_comment(cstringdata)
+
+    # Iterate line per line.
+    for line in lines:
+        statement = sp_remove_comment(line)
         eq = statement.find("=")
 
+        # Check if statement exist and if it follows the grammar.
         if eq == -1 and not statement.isspace() and len(statement) > 0:
-            err.append("Error on line " + str(line) + ". Not a statement > \"" + cstringdata + "\"")
+            err.append("Error on line %s. Not a statement > \"%s\"" % (str(linecur), line))
             return None, err
 
         if eq == -1:
-            line += 1
+            linecur += 1
             continue
 
+        # Extract attribute and value of the statement.
         larg = sp_trim_left_right_trim(statement[0:eq - 1])
         rarg = sp_trim_left_right_trim(statement[eq + 1:])
 
+        # Check if value of the attribute is valid.
         if rarg.isspace() or len(rarg) == 0:
-            err.append("Error on line " + str(line) + ". No right argument > \"" + cstringdata + "\"")
+            err.append("Error on line %s. No right argument > \"%s\"" % (str(linecur), line))
             return None, err
 
+        # Chec if attribute is valid.
         if larg.isspace() or len(larg) == 0:
-            err.append("Error on line " + str(line) + ". No left argument > \"" + cstringdata + "\"")
+            err.append("Error on line %s. No left argument > \"%s\"" % (str(linecur), line))
             return None, err
 
+        # Add value with key to dictionary.
         table[larg] = rarg
-        line += 1
+        linecur += 1
 
     return table, err
