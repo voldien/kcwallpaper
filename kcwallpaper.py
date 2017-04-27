@@ -267,7 +267,7 @@ extrline = ""
 while isAlive:
 
     # Fetch data from konachan program.
-    kc_com = "konachan -S%c -t \"%s\" -p %d  -f 'url preview score id'" % (konachan_sec_arg, tag, i)
+    kc_com = "konachan -S%c -t \"%s\" -p %d  -f 'url preview score id tags'" % (konachan_sec_arg, tag, i)
     p = os.popen(kc_com, 'r')
     try:
         output = p.readline()
@@ -283,14 +283,13 @@ while isAlive:
         i = 1
         continue
 
-    # TODO improve once the konachan issue with
-    # the order which the output data is stdout.
+    # The order which the output data is stdout.
     url = extrline[0]
     preview = extrline[1]
     score = extrline[2]
     imgid = extrline[3]
-    tags = extrline[4]
-
+    tags = reduce(lambda a,x : a + " " + x, extrline[4:])
+    
     # Check if image exists and cache is enabled.
     if usecache and sql_check_img_exists(sqlcon, mysql_table, imgid):
         cachefilename = get_sql_cached_img_url_by_id(sqlcon, mysql_table, imgid)
