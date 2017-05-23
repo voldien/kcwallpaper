@@ -46,3 +46,7 @@ In order to make the caching feature work the following Debian packages is neede
 ```bash
 apt-get install mysql-server
 ```
+
+## License ##
+-----
+This project is licensed under the GPL+3 License - see the [LICENSE](LICENSE) file for details
