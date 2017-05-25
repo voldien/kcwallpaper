@@ -19,17 +19,17 @@ from kcwverbose import *
 use_mysql = False
 
 
-def is_mysql_enabled():
+def kcw_is_mysql_enabled():
     return use_mysql
 
 
 # Connect to mysql server.
-def sql_connect(user, password, host, port, database, table):
+def kcw_sql_connect(user, password, host, port, database, table):
     try:
         sqlcon = mysql.connector.connect(user=user, password=password,
                                          host=host,
                                          database=database)
-        num_cached_entries = sql_num_entries_by_table(sqlcon, table)
+        num_cached_entries = kcw_sql_num_entries_by_table(sqlcon, table)
         kcw_verbose_print("Connected to mysql server %s:%d.\n" % (host, port))
         kcw_verbose_print("%d number of cached entries.\n" % num_cached_entries)
         return sqlcon
@@ -41,7 +41,7 @@ def sql_connect(user, password, host, port, database, table):
     return None
 
 
-def sql_clear_cache(sqlcon, table):
+def kcw_sql_clear_cache(sqlcon, table):
     if sqlcon is None:
         return
 
@@ -59,8 +59,8 @@ def sql_clear_cache(sqlcon, table):
         print(err.message)
 
 
-def sql_check_table_exists(sqlcon, table):
-    if sqlcon is None or is_mysql_enabled():
+def kcw_sql_check_table_exists(sqlcon, table):
+    if sqlcon is None or kcw_is_mysql_enabled():
         return False
 
     try:
@@ -74,8 +74,8 @@ def sql_check_table_exists(sqlcon, table):
     return True
 
 
-def sql_check_img_exists(sqlcon, table, imgid):
-    if sqlcon is None or is_mysql_enabled():
+def kcw_sql_check_img_exists(sqlcon, table, imgid):
+    if sqlcon is None or kcw_is_mysql_enabled():
         return False
     res = False
     try:
@@ -92,8 +92,8 @@ def sql_check_img_exists(sqlcon, table, imgid):
     return bool(res)
 
 
-def sql_num_entries_by_table(sqlcon, table):
-    if sqlcon is None or is_mysql_enabled():
+def kcw_sql_num_entries_by_table(sqlcon, table):
+    if sqlcon is None or kcw_is_mysql_enabled():
         return False
 
     try:
@@ -111,9 +111,9 @@ def sql_num_entries_by_table(sqlcon, table):
     return 0
 
 
-def add_img_entry(sqlcon, table, url, preview, score, imgid, tags):
+def kcw_add_img_entry(sqlcon, table, url, preview, score, imgid, tags):
 
-    if sqlcon is None or is_mysql_enabled():
+    if sqlcon is None or kcw_is_mysql_enabled():
         return False
 
     query = "INSERT INTO {} (url,preview,score,sourceid,tags) VALUES ('{}','{}','{}','{}','{}');".format(
@@ -128,7 +128,7 @@ def add_img_entry(sqlcon, table, url, preview, score, imgid, tags):
         print(err.message)
 
 
-def get_sql_cached_img_url(sqlcon, table):
+def kcw_get_sql_cached_img_url(sqlcon, table):
     cursor = sqlcon.cursor()
     query = "SELECT url FROM %s LIMIT %d 1 ;".format(table, 1)
     cursor.execute(query)
@@ -138,8 +138,8 @@ def get_sql_cached_img_url(sqlcon, table):
     return ""
 
 
-def get_sql_cached_img_url_by_id(sqlcon, table, imgid):
-    if sqlcon is None or is_mysql_enabled():
+def kcw_get_sql_cached_img_url_by_id(sqlcon, table, imgid):
+    if sqlcon is None or kcw_is_mysql_enabled():
         return ""
 
     res = {}
@@ -158,8 +158,8 @@ def get_sql_cached_img_url_by_id(sqlcon, table, imgid):
     return str(res[0])
 
 
-def get_sql_cached_img_url_by_tag(sqlcon, table, tag):
-    if sqlcon is None or is_mysql_enabled():
+def kcw_get_sql_cached_img_url_by_tag(sqlcon, table, tag):
+    if sqlcon is None or kcw_is_mysql_enabled():
         return ""
 
     cursor = sqlcon.cursor()
