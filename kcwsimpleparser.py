@@ -16,7 +16,7 @@
 
 # Defined grammar syntax.
 SP_COMMENTS_SYNTAX = "#"
-SP_EQUAL_SYNTAX = "="
+SP_ASSIGN_SYNTAX = "="
 
 
 # Trim string from left and right only.
@@ -33,7 +33,6 @@ def sp_parse_file(cfilepath):
         return table, err
     except IOError as err:
         print("Couldn't load config file, %s.\n" % err.message)
-        return None, None
     except Exception as err:
         print(err.message)
     return None, None
@@ -62,9 +61,9 @@ def sp_extract_grammar(f):
     # Iterate line per line.
     for line in lines:
         statement = sp_remove_comment(line)
-        eq = statement.find("=")
+        eq = statement.find(SP_ASSIGN_SYNTAX)
 
-        # Check if statement exist and if it follows the grammar.
+        # Check if statment exist and if it follows the grammar.
         if eq == -1 and not statement.isspace() and len(statement) > 0:
             err.append("Error on line %s. Not a statement > \"%s\"" % (str(linecur), line))
             return None, err
