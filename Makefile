@@ -1,5 +1,12 @@
 #!/bin/bash
 
+
+# Versions
+MAJOR := 0
+MINOR := 9
+PATCH := 0
+STATE := a
+VERSION := $(MAJOR).$(MINOR)$(STATE)$(PATCH)
 # Utilities.
 RM := rm -f
 CP := cp
@@ -18,7 +25,6 @@ PYTHON := kcwsql.py kcwsimpleparser.py
 PYTHONBIN := kcwallpaper.py
 #
 TARGET := kcwallpaper
-VERSION := 0.9.0
 
 install :
 	@echo -n "Create MySQL cache server.\n"
