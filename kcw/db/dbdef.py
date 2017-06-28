@@ -19,7 +19,7 @@ SQL_FORMAT_QUERY_TRUNCATE = "TRUNCATE TABLE konachan.{} ;"
 SQL_FORMAT_QUERY_CHECK_IMG_EXISTS = "SELECT COUNT(*) FROM {} WHERE sourceid='{}';"
 SQL_FORMAT_QUERY_TABLE_EXIST = ""
 SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE = "SELECT COUNT(*) FROM {} ;"
-SQL_FORMAT_QUERY_ADD_IMG_ENTRY = "INSERT INTO {} (url,preview,score,sourceid,tags) VALUES ('{}','{}','{}','{}','{}');"
+SQL_FORMAT_QUERY_ADD_IMG_ENTRY = "INSERT INTO {} (url, preview, score, sourceid, tags, date) VALUES ('{}','{}','{}','{}','{}','{}');"
 SQL_FORMAT_GET_CACHED_IMAGE_URL = "SELECT url FROM %s LIMIT %d 1 ;"
 SQL_FORMAT_QUERY_IMG_BY_IMGID = "SELECT url FROM {} WHERE sourceid='{}';"
 SQL_FORMAT_QUERY_IMG_BY_TAG = "SELECT {} FROM {} WHERE tags LIKE '%{}%' LIMIT 1 OFFSET {} ;"
@@ -29,22 +29,20 @@ SQL_CREATE_DATABASE = "CREATE SCHEMA IF NOT EXISTS `konachan`;"
 "USE konachan;"
 
 # Table for caching image data.
-SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS `img` ("
-"	`id` INT NOT NULL AUTO_INCREMENT,	#	ID"
-"	`sourceid` INT NOT NULL,			#	ID of image from source."
-"	`url` BLOB NOT NULL,				#	Relative full scale URL."
-"	`sample` BLOB NOT NULL,				#	Relative sample URL."
-"	`preview` BLOB NOT NULL,			#	Relative preview URL."
-"	`score` INT NOT NULL,				#	Score from the date."
-"	`tags` BLOB NOT NULL,				#	tags assoicated."
-"	`date` DATE NOT NULL,				#	Date of modification."
-"	PRIMARY KEY (`id`)"
-");"
+SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS `img` (" \
+    "	`sourceid` INT NOT NULL,"                       \
+    "	`url` BLOB NOT NULL,"                           \
+    "	`preview` BLOB NOT NULL,"                       \
+    "	`score` INT NOT NULL,"                          \
+    "	`tags` BLOB NOT NULL,"                          \
+    "	`date` DATE NOT  NULL,"                         \
+    "	`quality` INT"                                  \
+    ");"                                                \
 
 
 # SQL query command for creating user for access rights.
-SQL_CREATE_USER = "CREATE USER 'kcwadmin'@'%';"
-"SET PASSWORD for 'kcwadmin'@'localhost' = PASSWORD(\"randompass\");"
-"GRANT SELECT,INSERT,ALTER,DELETE on konachan.img to 'kcwadmin'@'localhost'"
+SQL_CREATE_USER = "CREATE USER 'kcwadmin'@'%';"                                         \
+    "SET PASSWORD for 'kcwadmin'@'localhost' = PASSWORD(\"randompass\");"               \
+    "GRANT SELECT,INSERT,ALTER,DELETE on konachan.img to 'kcwadmin'@'localhost'"        \
 
 
