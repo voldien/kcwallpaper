@@ -14,7 +14,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-kcw_verbose = False
 kcw_verbosity = 0
 
 KCW_QUITE = 0
@@ -27,16 +26,8 @@ def kcw_set_verbosity(verbosity):
     global kcw_verbosity
     kcw_verbosity = verbosity
 
-
-# Check if verbosity is enabled.
-def kcw_is_verbose():
-    return kcw_verbose
-
-
-def kcw_enable_verbose():
-    global kcw_verbose
-    kcw_verbose = True
-
+def kcw_get_verbosity():
+    return kcw_verbosity
 
 # Print error.
 def kcw_errorf(fmt, **kwargs):
@@ -46,7 +37,7 @@ def kcw_errorf(fmt, **kwargs):
 
 #
 def kcw_logf(verbosity, fmt, *kwargs):
-    if kcw_verbose <= verbosity:
+    if kcw_verbosity <= verbosity:
         print(fmt % kwargs)
 
 
@@ -57,5 +48,5 @@ def kcw_verbose_print(fmt, *kwargs):
 
 #
 def kcw_debug_printf(fmt, *kwargs):
-    return kcw_logf(KCW_QUITE, fmt % kwargs)
+    return kcw_logf(KCW_DEBUG, fmt % kwargs)
 
