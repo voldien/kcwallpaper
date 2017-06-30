@@ -101,21 +101,26 @@ def read_config_file(config_path):
             kcw.kcw_verbose_print("table set to {}".format(v))
         elif k == "username":
             username = v
+            kcw.kcw_config_set("sql_username", username)
             kcw.kcw_verbose_print("username : {}.".format(username))
         elif k == "password":
             password = v
+            kcw.kcw_config_set("sql_password", password)
             kcw.kcw_verbose_print("password : {}.".format(password))
         elif k == "sleep":
             kcw.kcw_config_set("sleep", float(v))
             kcw.kcw_verbose_print("sleep : {} secs.".format(float(v)))
         elif k == "tag":
             tag = v
+            kcw.kcw_config_set("tag", tag)
             kcw.kcw_verbose_print("tag : {}.".format(tag))
         elif k == "cachedata":
             cachedata = (v == 'True')
+            kcw.kcw_config_set("cachedata", cachedata)
             kcw.kcw_verbose_print("Caching status {}.".format(cachedata))
         elif k == "usecache":
             usecache = (v == 'True')
+            kcw.kcw_config_set("usecache", cachedata)
             kcw.kcw_verbose_print("Using caching status {}".format(usecache))
         elif k == "cachedir":
             cachedirectory = os.path.expanduser(v)
@@ -188,14 +193,14 @@ def kcw_read_options(config_path):
         elif o == "--clear-cache":
             kcw.kcw_verbose_print("Clearing cache database.\n")
             tmpsqlcon = kcw.db.kcw_create_sql()
-            tmpsqlcon.connect(kcw.mysql_username,
-                              kcw.mysql_password,
-                              kcw.mysql_hostname,
-                              kcw.mysql_port,
-                              mysql_database,
-                              mysql_table)
-            tmpsqlcon.clear_cache(tmpsqlcon, mysql_table)
-            tmpsqlcon.close()
+            tmpsqlcon.connect(
+                kcw.kcw_config_get("sql_username"),
+                kcw.kcw_config_get("sql_password"),
+                kcw.kcw_config_get("sql_hostname"),
+                kcw.kcw_config_get("sql_port"),
+                kcw.kcw_config_get("sql_database"))
+            tmpsqlcon.clear_cache(tmpsqlcon, kcw.kcw_config_get("table"))
+            tmpsqlcon.disconnect()
             quit(0)
         elif o == "--clear-cache-img":
             kcw.kcw_verbose_print("Clearing image cache.\n")
