@@ -19,10 +19,22 @@ config = {}
 
 # Set configuration.
 def kcw_config_set(key, v):
-    kcw.kcwlog.kcw_debug_printf("Set ({},{})".format(key,v))
+    """
+
+    :param key:
+    :param v:
+    :return:
+    """
+    kcw.kcwlog.kcw_debug_printf("Set ({},{})".format(key, v))
     config[key] = v
 
 
 # Get configuration by key.
 def kcw_config_get(key):
+    """
+
+    :param key:
+    :return:
+    """
+    kcw.kcwlog.kcw_debug_printf("Get ({})".format(key))
     return config[key]
