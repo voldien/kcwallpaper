@@ -1,0 +1,40 @@
+# bash completion for kcwallpaper(1)
+
+_kcwallpaper() 
+{
+	local cur prev opts
+	COMPREPLY=()
+	cur="${COMP_WORDS[COMP_CWORD]}"
+	prev="${COMP_WORDS[COMP_CWORD-1]}"
+
+	opts="--version --verbose --debug --tag= --sleep= --mysql --config= --cachedir= --fifo= --clear-cache --clear-cache-img --ssl --random --quality= --advanced_konachan_flag= --cacheonly"
+
+	case "${prev}" in
+		"--fifo="  | "--config=" | "--cachedir=")
+			COMPREPLY=( $(compgen -f ${cur}) )
+			return 0	
+		;;
+		"--quality=")
+			local subopt="low medium high"
+			COMPREPLY=( $(compgen -W "${subopt}" -- ${cur}) )
+			return 0
+		;;
+		"--tag=")
+			if [ -n "$(which konachan)" ] && [ -n "${cur}" ] ; then
+				local subopt=\"$(konachan -s -t "${cur}*" -T -p 0 --limit=10 -f "name")\"
+				COMPREPLY=( $(compgen -W "${subopt}" -- ${cur}) )
+				return 0
+			fi
+		;;
+		*)
+		;;
+	esac
+
+	if [[ ${cur} == --* ]] ; then
+		COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+		return 0
+	fi
+}
+complete -F _kcwallpaper kcwallpaper
+
+
