@@ -39,7 +39,14 @@ def kcw_errorf(fmt, **kwargs):
 
 #
 def kcw_logf(verbosity, fmt, *kwargs):
-    if kcw_verbosity <= verbosity:
+    """
+
+    :param verbosity:
+    :param fmt:
+    :param kwargs:
+    :return:
+    """
+    if kcw_get_verbosity() >= verbosity:
         print(fmt % kwargs)
 
 
