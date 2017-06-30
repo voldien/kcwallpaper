@@ -7,7 +7,7 @@ kcwallpaper is a wallpaper/slideshow program for displaying images from [konacha
 * Configurable - The settings for the application can be configured with the *kcw.conf* file.
 * Overridable options - Attribute of the program can be altered with short and long options.
 * SSL - The program can run with using SSL/TLS for creating secure connections between server and client over HTTP.
-
+* AutoComplete - The program support bash autocomplete for program options including tag autocomplete *iff* the *konachan* query program is install on the system. 
 
 
 ## Installation ##
@@ -40,7 +40,7 @@ kcwallpaper -t "short_hair cat"
 ----------------
 In order to run the program, the following Debian packages has to be installed.
 ```bash
-apt-get install python2.7 python-mysql.connector
+apt-get install python2.7 python-mysql.connector python-sqlite
 ```
 In order to make the caching feature work the following Debian packages is needed.
 ```bash
