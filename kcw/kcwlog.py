@@ -14,11 +14,13 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-kcw_verbosity = 0
-
+#
 KCW_QUITE = 0
 KCW_VERBOSE = 1
 KCW_DEBUG = 2
+
+#
+kcw_verbosity = KCW_QUITE
 
 
 # Set verbosity level of the program.
