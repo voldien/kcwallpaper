@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import kcw
+import kcw.db
 import getopt
 import sys
 import os
@@ -123,7 +124,7 @@ def read_config_file(config_path):
             kcw.kcw_verbose_print("Caching status {}.".format(cachedata))
         elif k == "usecache":
             usecache = (v == 'True')
-            kcw.kcw_config_set("usecache", cachedata)
+            kcw.kcw_config_set("usecache", usecache)
             kcw.kcw_verbose_print("Using caching status {}".format(usecache))
         elif k == "cachedir":
             cachedirectory = os.path.expanduser(v)
@@ -195,15 +196,15 @@ def kcw_read_options(config_path):
             kcw.kcw_config_set("cacheonly", True)
         elif o == "--clear-cache":
             kcw.kcw_verbose_print("Clearing cache database.\n")
-            tmpsqlcon = kcw.db.kcw_create_sql()
-            tmpsqlcon.connect(
+            cachecon = kcw.db.kcw_create_sql(kcw.kcw_config_get("sql"))
+            cachecon.connect(
                 kcw.kcw_config_get("sql_username"),
                 kcw.kcw_config_get("sql_password"),
                 kcw.kcw_config_get("sql_hostname"),
                 kcw.kcw_config_get("sql_port"),
                 kcw.kcw_config_get("sql_database"))
-            tmpsqlcon.clear_cache(tmpsqlcon, kcw.kcw_config_get("table"))
-            tmpsqlcon.disconnect()
+            cachecon.clear_cache(cachecon, kcw.kcw_config_get("table"))
+            cachecon.disconnect()
             quit(0)
         elif o == "--clear-cache-img":
             kcw.kcw_verbose_print("Clearing image cache.\n")

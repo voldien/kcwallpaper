@@ -147,9 +147,9 @@ def main():
                                                                         kcw.kcw_config_get("sql_table"), imgid)
             else:
                 cachefilename = sqlcon.get_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
-                                                                         QUALITY_SQL_COLUMN[
-                                                                             kcw.kcw_config_get("quality")],
-                                                                         kcw.kcw_config_get("tag"), i)
+                                                                    QUALITY_SQL_COLUMN[
+                                                                    kcw.kcw_config_get("quality")],
+                                                                    kcw.kcw_config_get("tag"), i)
 
             if not cachefilename:
                 i += 1
