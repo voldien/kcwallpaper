@@ -35,7 +35,7 @@ class SqliteConnection:
         self.enabled = True
 
     #
-    def kcw_is_sqlite_enabled(self):
+    def is_enabled(self):
         return self.enabled
 
     # Execute SQL command.
@@ -102,7 +102,7 @@ class SqliteConnection:
 
     #
     def kcw_sql_check_table_exists(self, table):
-        if not self.kcw_is_sqlite_enabled():
+        if not self.is_enabled():
             return False
 
         res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
@@ -111,7 +111,7 @@ class SqliteConnection:
 
     #
     def kcw_sql_check_img_exists(self, table, imgid):
-        if not self.kcw_is_sqlite_enabled():
+        if not self.is_enabled():
             return False
 
         #
@@ -121,7 +121,7 @@ class SqliteConnection:
 
     #
     def kcw_sql_num_entries_by_table(self, table):
-        if not self.kcw_is_sqlite_enabled():
+        if not self.is_enabled():
             return False
 
         res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
@@ -133,7 +133,7 @@ class SqliteConnection:
 
     #
     def add_img_entry(self, table, url, preview, score, imgid, tags):
-        if not self.kcw_is_sqlite_enabled():
+        if not self.is_enabled():
             return False
 
         res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
@@ -152,7 +152,7 @@ class SqliteConnection:
 
     #
     def kcw_get_sql_cached_img_url_by_id(self, table, imgid):
-        if not self.kcw_is_sqlite_enabled():
+        if not self.is_enabled():
             return ""
 
         #
@@ -166,7 +166,7 @@ class SqliteConnection:
 
     #
     def kcw_get_sql_cached_img_url_by_tag(self, table, col, tag, offset=0):
-        if not self.kcw_is_sqlite_enabled():
+        if not self.is_enabled():
             return ""
 
         res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
