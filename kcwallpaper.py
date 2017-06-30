@@ -56,7 +56,7 @@ def main():
     kcw_verbose_print("Starting wallpaper process.\n")
     swp_args.append("-p")
     swp_args.append(kcw.kcw_config_get("wallpaper_fifo"))
-    if kcw_is_verbose():
+    if kcw_get_verbosity() >= KCW_VERBOSE:
         swp_args.append("--verbose")
     swp = kcw.kcw_create_popen(swp_args)
     if not swp:
@@ -151,10 +151,11 @@ def main():
                                                                              kcw.kcw_config_get("quality")],
                                                                          kcw.kcw_config_get("tag"), i)
 
-            if cachefilename is None:
+            if not cachefilename:
                 i += 1
                 continue
 
+            #
             fpath = "{}/{}".format(kcw.kcw_config_get("cachedirectory"), cachefilename)
             kcw_verbose_print("Using cached file %s.\n", fpath)
             try:
