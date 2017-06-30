@@ -14,383 +14,211 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from kcwsql import *
-from kcwverbose import *
-from kcwsimpleparser import *
-import sys
-import getopt
-import time
-import signal
-import os
-import urllib2
-import subprocess
 import atexit
+import os
+import signal
+import time
+import urllib2
 
-# Global constant variable.
-VERSION = "0.9.0"
-CONFIG_FIELPATH = "/etc/"
-CONFIG_FIELNAME = "kcw.conf"
-DEFAULT_USECACHE = True
-DEFAULT_CACHEDATA = True
-DEFAULT_CACHEFILEDIRECTORY = os.path.expanduser("~/.kcw/cache/")
-DEFAULT_SLEEPTIME = 10.0
-DEFAULT_SEARCHTAG = "cat"
-DEFAULT_USE_MYSQL = True
-DEFAULT_MYSQL_PORT = 3389
-DEFAULT_MYSQL_HOSTNAME = "localhost"
-DEFAULT_MYSQL_USERNAME = "kcwadmin"
-DEFAULT_MYSQL_PASSWORD = "randompass"
-DEFAULT_MYSQL_DATABASE = "konachan"
-
-#
-ssl = True
-hasInternet = True
-wallpaper_fifo = os.path.expanduser("~/.kcw/wallfifo0")
-config_file = CONFIG_FIELPATH + CONFIG_FIELNAME
-usecache = DEFAULT_USECACHE
-cachedata = DEFAULT_CACHEDATA
-cachedirectory = DEFAULT_CACHEFILEDIRECTORY
-use_mysql = DEFAULT_USE_MYSQL
-mysql_database = 'konachan'
-mysql_hostname = DEFAULT_MYSQL_HOSTNAME
-mysql_username = DEFAULT_MYSQL_USERNAME
-mysql_password = DEFAULT_MYSQL_PASSWORD
-mysql_port = DEFAULT_MYSQL_PORT
-mysql_table = "img"
-tag = DEFAULT_SEARCHTAG
-sleep = DEFAULT_SLEEPTIME
-sqlcon = None
-i = 1
-
-isAlive = True
-swp_args = ["swp", "--fullscreen", "-C"]
-swp = None
-kc_args = ["konachan", "-S", "-f", "'url sample preview score id tags'"]
-kc_args.append("-%c")
-kc_args.append("-t \"%s\"")
-kc_args.append("-p %d")
-quality = 2
-
-shortopt = "vVmdt:T:h:P:p:c:F:s:rq:"
-longoptions = ["version", "verbose", "tag=", "sleep=", "mysql", "config=", "cachedir=", "fifo=", "clear-cache",
-               "clear-cache-img", "ssl", "random", "quality="]
+import kcw.db
+from kcw import *
 
 
-# Read user input
-try:
-    opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
-except getopt.GetoptError as err:
-    print(err.message)
+def main():
+    """ Main function.  """
 
-for o, a in opts:
-    if o in ("-v", "--version"):
-        print("version %s" % VERSION)
-        exit(0)
-    elif o in ("-V", "--verbose"):
-        kcw_enable_verbose()
-        kcw_verbose_print("Enabled verbose.\n")
+    # Read options.
+    kcw.kcwreadoptions.kcw_read_options(DEFAULT_CONFIG_PATH)
 
-# print warning.
-if int(sys.version.split()[0].split(".")[2]) < 9:
-    print("version 2.7.9 or greater is required for using SSL for urllib2. current %s .\n" % sys.version.split()[0])
+    # Software interrupt.
+    def catch_signal(sig, frame):
+        if sig is signal.SIGINT:
+            if sqlcon:
+                sqlcon.kcw_sql_disconnect()
+            if swp:
+                swp.kill()
+            quit(0)
+        if sig is signal.SIGCHLD:
+            kcw_errorf("Child process terminated.\n")
+            quit(1)
+        else:
+            kcw_errorf("Unknown signal %d.\n" % sig)
 
-
-# Software interrupt.
-def catch_signal(sig, frame):
-    if sig is signal.SIGINT:
-        if sqlcon:
-            sqlcon.disconnect()
-        if swp:
+    def kill_child_ps():
+        if swp is not None:
             swp.kill()
-        quit(0)
-    if sig is signal.SIGCHLD:
-        print("Child process terminated.\n")
-        quit(1)
-    else:
-        print("Unknown signal %d.\n" % sig)
 
+    # Setup for making the program terminate properly.
+    atexit.register(kill_child_ps)
+    signal.signal(signal.SIGINT, catch_signal)
 
-def kill_child_ps():
-    if swp is not None:
-        swp.kill()
-
-# Setup for making the program terminate properly.
-atexit.register(kill_child_ps)
-signal.signal(signal.SIGINT, catch_signal)
-
-# Read config file.
-config_table, err = sp_parse_file(config_file)
-if config_table is None or err:
-    if err:
-        for k in err:
-            print(k)
-    else:
-        print("config_table is None.\n")
-    exit(1)
-
-
-# Iterate through all of the attributes
-for k, v in config_table.iteritems():
-    if k == "mysql":
-        use_mysql = (v == 'True')
-        kcw_verbose_print("Using mysql.")
-    elif k == "hostname":
-        hostname = v
-        kcw_verbose_print("hostname : {}.".format(hostname))
-    elif k == "port":
-        port = v
-        kcw_verbose_print("port : {}.".format(port))
-    elif k == "db":
-        mysql_database = v
-        kcw_verbose_print("DB set to {}.".format(mysql_database))
-    elif k == "dbtable":
-        mysql_table = v
-        kcw_verbose_print("table set to {}".format(mysql_table))
-    elif k == "username":
-        username = v
-        kcw_verbose_print("username : {}.".format(username))
-    elif k == "password":
-        password = v
-        kcw_verbose_print("password : {}.".format(password))
-    elif k == "sleep":
-        sleep = float(v)
-        kcw_verbose_print("sleep : {} secs.".format(sleep))
-    elif k == "tag":
-        tag = v
-        kcw_verbose_print("tag : {}.".format(tag))
-    elif k == "cachedata":
-        cachedata = (v == 'True')
-        kcw_verbose_print("Caching status {}.".format(cachedata))
-    elif k == "usecache":
-        usecache = (v == 'True')
-        kcw_verbose_print("Using caching status {}".format(usecache))
-    elif k == "cachedir":
-        cachedirectory = os.path.expanduser(v)
-        kcw_verbose_print("Cache directory set to {}".format(cachedirectory))
-    elif k == "flag":
-        flag = v
-        kcw_verbose_print("flag : {}.".format(flag))
-    elif k == "fifo":
-        wallpaper_fifo = os.path.expanduser(v)
-        kcw_verbose_print("Wallpaper fifio set to {}.".format(wallpaper_fifo))
-    elif k == "ssl":
-        ssl = (v == "True")
-        kcw_verbose_print("SSL set to {}".format(ssl))
-    else:
-        print ("%s is not a known configuration attribute.\n" % k)
-
-
-#   Delete config table because it has served its purpose.
-del config_table
-del err
-
-# Read user input
-try:
-    opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
-except getopt.GetoptError as err:
-    print(err.msg)
-
-for o, a in opts:
-    if o in ("-t", "--tag"):
-        tag = a
-        kcw_verbose_print("Search tag override to {}.".format(tag))
-    elif o in ("-T", "--sleep"):
-        print(a)
-        sleep = float(a)
-        kcw_verbose_print("Sleep time override to {}.".format(sleep))
-    elif o in ("-p", "--pid"):
-        pid = int(a)
-    elif o in ("-c", "--config"):
-        config_file = a
-        kcw_verbose_print("config file override to {}.".format(config_file))
-    elif o in "cachedir":
-        cachedirectory = os.path.expanduser(a)
-        kcw_verbose_print("Cache directory override to {}.".format(cachedirectory))
-    elif o in ("-m", "--mysql"):
-        use_mysql = True
-        kcw_verbose_print("Enable mysql.\n")
-    elif o in ("--fifo", "-F"):
-        wallpaper_fifo = a
-        kcw_verbose_print("FIFO override to {}".format(wallpaper_fifo))
-    elif o in "--ssl":
-        ssl = (a == "True")
-    elif o == "--clear-cache":
-        kcw_verbose_print("Clearing cache database.\n")
-        tmpsqlcon = kcw_sql_connect(mysql_username, mysql_password, mysql_hostname, mysql_port, mysql_database, mysql_table)
-        kcw_sql_clear_cache(tmpsqlcon, mysql_table)
-        tmpsqlcon.close()
-        quit(0)
-    elif o == "--clear-cache-img":
-        kcw_verbose_print("Clearing image cache.\n")
-        lst = os.listdir(cachedirectory)
-        for l in lst:
-            kcw_verbose_print("Removing file from cache directory %s.\n" % l)
-            fpath = "%s/%s" % (cachedirectory, l)
-            os.remove(fpath)
-        quit(0)
-    elif o == "--random":
-        kc_args.append("--random")
-    elif o in ("--quality=", "-q" ):
-        quality = int(a)
-
-# Create wallpaper process for display pictures.
-try:
+    # Create wallpaper process for display pictures.
     kcw_verbose_print("Starting wallpaper process.\n")
     swp_args.append("-p")
-    swp_args.append(wallpaper_fifo)
+    swp_args.append(kcw.kcw_config_get("wallpaper_fifo"))
     if kcw_is_verbose():
         swp_args.append("--verbose")
-    swp = subprocess.Popen(swp_args)
-except Exception as err:
-    print("Failed to create swp process for displaying the image. %s." % err)
-    quit(1)
+    swp = kcw.kcw_create_popen(swp_args)
+    if not swp:
+        quit(1)
 
-# Create cache directory
-if cachedata and not os.path.isdir(cachedirectory):
-    kcw_verbose_print("Creating cache directory %s." % cachedirectory)
-    try:
-        os.makedirs(cachedirectory)
-    except OSError as err:
-        print(err.message)
-        exit(1)
-    except Exception as err:
-        print(err.message)
-        exit(1)
+    # Create cache directory
+    if kcw.kcw_config_get("cachedata") and not os.path.isdir(kcw.kcw_config_get("cachedirectory")):
+        kcw_verbose_print("Creating cache directory %s." % kcw.kcw_config_get("cachedirectory"))
+        kcw_create_directory(kcw.kcw_config_get("cachedirectory"))
 
-# Create mysql connection and connect. (Optional)
-if use_mysql:
-    sqlcon = kcw_sql_connect(mysql_username, mysql_password, mysql_hostname, mysql_port, mysql_database, mysql_table)
-    # Disable caching if connection fails.
-    if sqlcon is None:
-        cachedata = False
-        usecache = False
-        sqlcon = None
+    # Create mysql connection and connect. (Optional)
+    if kcw.kcw_config_get("use_sql"):
 
-if ssl:
-    konachan_sec_arg = 's'
-    http_pro = "https"
-else:
-    konachan_sec_arg = 'n'
-    http_pro = "http"
-
-
-# Data associate with
-response = None
-imgdata = None
-extrline = ""
-konachan_arg = reduce(lambda a,x : a + " " + x, kc_args)
-while isAlive:
-
-    # Fetch data from konachan program.
-    kc_cmd = konachan_arg % (konachan_sec_arg, tag, i)
-    p = os.popen(kc_cmd, 'r')
-    try:
-        output = p.readline()
-    except IOError as err:
-        print(err.message)
-
-    # Extract values from the query tool.
-    if len(output) > 0:
-        extrline = output.split()
-    elif use_mysql and sqlcon:
-        # Restart the query.
-        kcw_verbose_print("No result from konachan.\n")
-        i = 1
-        continue
-
-    # The order which the output data is stdout.
-    url = extrline[0]
-    sample = extrline[1]
-    preview = extrline[2]
-    score = extrline[3]
-    imgid = extrline[4]
-    tags = reduce(lambda a,x : a + " " + x, extrline[5:])
-
-    # TODO improve
-    if quality >= 2:
-        fetchurl = url
-    elif quality >= 1:
-        fetchurl = sample
-    else:
-        fetchurl = preview
-    
-    # Check if image exists and cache is enabled.
-    if usecache and kcw_sql_check_img_exists(sqlcon, mysql_table, imgid):
-        cachefilename = kcw_get_sql_cached_img_url_by_id(sqlcon, mysql_table, imgid)
-        fpath = "%s/%s" % (cachedirectory, cachefilename)
-        kcw_verbose_print("Using cached file %s.\n" % fpath)
         try:
-            with open(fpath, 'rb') as fcach:
-                imgdata = fcach.read()
-            fcach.close()
+            sqlcon = kcw.db.kcw_create_sql(kcw.kcw_config_get("sql"))
+            sqlcon.kcw_sql_connect(
+                kcw.kcw_config_get("sql_username"),
+                kcw.kcw_config_get("sql_password"),
+                kcw.kcw_config_get("sql_hostname"),
+                kcw.kcw_config_get("sql_port"),
+                kcw.kcw_config_get("sql_database"))
+
         except Exception as err:
-            print(err.message)
-    else:
-        if hasInternet:
+            # Disable caching if connection fails.
+            kcw.kcw_config_set("cachedata", False)
+            kcw.kcw_config_set("usecache", False)
+            sqlcon = None
+
+    # Set http protocol.
+    http_pro = URL_PROTOCOL_QUALIFIER[kcw.kcw_config_get("ssl")]
+    kc_array_args.append(KONACHAN_SECURITY_FLAG[kcw.kcw_config_get("ssl")])
+
+    # Data associate with
+    i = 0
+    isalive = True
+    imgid = 0
+    response = None
+    imgdata = None
+    extrline = None
+    kc_cmd = reduce(lambda a, x: a + " " + x, kc_array_args)
+    get_kcw_cmd = lambda i: kc_cmd % (kcw.kcw_config_get("tag"), i)
+
+    # Sleep in order allow the swp program to start up properly. Causes it
+    # crash otherwise.
+    time.sleep(0.2)
+
+    # Main program loop.
+    while isalive:
+
+        # Don't query in 'cacheonly' mode.
+        if not kcw.kcw_config_get("cacheonly"):
+
+            # Fetch data from konachan program.
+            kc_cmdf = get_kcw_cmd(i)
+            p = os.popen(kc_cmdf, 'r')
+
+            #
             try:
-                # Create URL.
-                url = "%s://www.%s" % (http_pro, fetchurl)
-                kcw_verbose_print("Downloading image from URL : %s\n" % fetchurl)
-                # basename for the image file.
-                basename = os.path.basename(url).decode().replace("%20", " ")
-                #   Create connection.
-                response = urllib2.urlopen(url)
-                # Download all data.
-                imgdata = response.read()
-                response.close()
-                del response
+                output = p.readline()
+            except IOError as err:
+                kcw_errorf(err.message)
 
-            except urllib2.URLError as err:
-                print(err.message)
+            # Extract values from the query tool.
+            if len(output) > 0:
+                extrline = output.split()
+            elif kcw.kcw_config_get("use_sql") and sqlcon:
+                # Restart the query.
+                kcw_verbose_print("No result from konachan.\n")
+                i = 1
+                continue
 
-            # Cache image if caching is enabled and sql connection exists.
-            if cachedata and sqlcon:
-                kcw_verbose_print("Caching downloaded image data to %s as %s.\n" % (cachedirectory, basename))
-                fpath = "%s/%s" % (cachedirectory, basename)
-                cachef = open(fpath, 'wb')
-                cachef.write(imgdata)
-                cachef.close()
-                # Add image and its attributes to database.
-                kcw_verbose_print("Adding image to mysql database.\n")
-                kcw_add_img_entry(sqlcon, mysql_table, basename, preview, score, imgid, tags)
+            # The order which the output data is stdout.
+            url = extrline[0]
+            sample = extrline[1]
+            preview = extrline[2]
+            score = extrline[3]
+            imgid = extrline[4]
+            tags = reduce(lambda a, x: a + " " + x, extrline[5:])
 
-        elif usecache:
-            print("No internet connection.\n")
-            cachefilename = kcw_get_sql_cached_img_url_by_tag(sqlcon, mysql_table, tag)
-            with open(cachedirectory + cachefilename, 'rb') as fcach:
-                imgdata = fcach.read()
-            fcach.close()
-        # Wait intill internet has returned
+            # Get URL.
+            fetchurl = extrline[abs(2 - kcw.kcw_config_get("quality"))]
+
+        # Check if image exists and cache is enabled.
+        if (kcw.kcw_config_get("usecache") and sqlcon.kcw_sql_check_img_exists(kcw.kcw_config_get("sql_table"), imgid)) \
+                or (kcw.kcw_config_get("cacheonly") and kcw.kcw_config_get("usecache")):
+            if not kcw.kcw_config_get("cacheonly"):
+                cachefilename = sqlcon.kcw_get_sql_cached_img_url_by_id(
+                                                                        kcw.kcw_config_get("sql_table"), imgid)
+            else:
+                cachefilename = sqlcon.kcw_get_sql_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
+                                                                         QUALITY_SQL_COLUMN[
+                                                                             kcw.kcw_config_get("quality")],
+                                                                         kcw.kcw_config_get("tag"), i)
+
+            if cachefilename is None:
+                i += 1
+                continue
+
+            fpath = "{}/{}".format(kcw.kcw_config_get("cachedirectory"), cachefilename)
+            kcw_verbose_print("Using cached file %s.\n", fpath)
+            try:
+                with open(fpath, 'rb') as fcach:
+                    imgdata = fcach.read()
+                fcach.close()
+            except Exception as err:
+                kcw_errorf(err.message)
         else:
-            print("No internet connection.\n")
+            if kcw.kcw_config_get("hasInternet"):
+                try:
+                    # Create URL.
+                    url = "{}://www.{}".format(http_pro, fetchurl)
+                    kcw_verbose_print("Downloading image from URL : %s\n", fetchurl)
+                    # basename for the image file.
+                    basename = os.path.basename(url).decode().replace("%20", " ")
+                    #   Create connection.
+                    response = urllib2.urlopen(url)
+                    # Download all data.
+                    imgdata = response.read()
+                    response.close()
+                    del response
 
-    # Write image data to FIFO.
-    try:
-        if os.path.exists(wallpaper_fifo):
-            f = open(wallpaper_fifo, 'wb')
-            f.write(imgdata)
-            f.close()
-        else:
-            print("FIFO file didn't exist.\n")
-            exit(1)
-    except IOError as err:
-        print("Couldn't open fifo file '%s, %s'.\n", (wallpaper_fifo, err.message))
-        exit(1)
-    except AttributeError as err:
-        print("att '%s, %s'.\n", (wallpaper_fifo, err.message))
-        exit(1)
-    except Exception as err:
-        print ("Unexpected error:", sys.exc_info()[0])
-        exit(1)
+                except urllib2.URLError as err:
+                    kcw_errorf(err.message)
 
-    # delete the data. 
-    del output
-    del imgdata
+                # Cache image if caching is enabled and sql connection exists.
+                if kcw.kcw_config_get("cachedata") and sqlcon:
+                    kcw_verbose_print("Caching downloaded image data to %s as %s.\n",
+                                      kcw.kcw_config_get("cachedirectory"), basename)
 
-    # Sleep intill next fetch.
-    time.sleep(sleep)
-    i += 1
+                    fpath = "%s/%s" % (kcw.kcw_config_get("cachedirectory"), basename)
+                    cachef = open(fpath, 'wb')
+                    cachef.write(imgdata)
+                    cachef.close()
 
-# Cleanup.
-if sqlcon:
-    sqlcon.close()
+                    # Add image and its attributes to database.
+                    kcw_verbose_print("Adding image to SQL database.\n")
+                    sqlcon.kcw_add_img_entry(kcw.kcw_config_get("sql_table"), basename, preview, score, imgid, tags)
+            #
+            elif kcw_config_get("usecache"):
+                print("No internet connection.\n")
+                cachefilename = sqlcon.kcw_get_sql_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
+                                                                         kcw.kcw_config_get("tag"))
+                with open(kcw.kcw_config_get("cachedirectory") + cachefilename, 'rb') as fcach:
+                    imgdata = fcach.read()
+                fcach.close()
+            # Wait intill internet has returned
+            else:
+                print("No internet connection.\n")
+                exit(1)
+
+        # Write image data to FIFO.
+        kcw.kcw_write_fifo(kcw.kcw_config_get("wallpaper_fifo"), imgdata)
+
+        # Sleep intill next fetch.
+        time.sleep(kcw.kcw_config_get("sleep"))
+        i += 1
+
+    # Cleanup.
+    sqlcon.kcw_sql_disconnect()
+
+    return 0
+
+#
+if __name__ == '__main__':
+    main()
