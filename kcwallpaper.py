@@ -34,7 +34,7 @@ def main():
     def catch_signal(sig, frame):
         if sig is signal.SIGINT:
             if sqlcon:
-                sqlcon.kcw_sql_disconnect()
+                sqlcon.disconnect()
             if swp:
                 swp.kill()
             quit(0)
@@ -72,7 +72,7 @@ def main():
 
         try:
             sqlcon = kcw.db.kcw_create_sql(kcw.kcw_config_get("sql"))
-            sqlcon.kcw_sql_connect(
+            sqlcon.connect(
                 kcw.kcw_config_get("sql_username"),
                 kcw.kcw_config_get("sql_password"),
                 kcw.kcw_config_get("sql_hostname"),
@@ -140,13 +140,13 @@ def main():
             fetchurl = extrline[abs(2 - kcw.kcw_config_get("quality"))]
 
         # Check if image exists and cache is enabled.
-        if (kcw.kcw_config_get("usecache") and sqlcon.kcw_sql_check_img_exists(kcw.kcw_config_get("sql_table"), imgid)) \
+        if (kcw.kcw_config_get("usecache") and sqlcon.check_img_exists(kcw.kcw_config_get("sql_table"), imgid)) \
                 or (kcw.kcw_config_get("cacheonly") and kcw.kcw_config_get("usecache")):
             if not kcw.kcw_config_get("cacheonly"):
-                cachefilename = sqlcon.kcw_get_sql_cached_img_url_by_id(
+                cachefilename = sqlcon.get_cached_img_url_by_id(
                                                                         kcw.kcw_config_get("sql_table"), imgid)
             else:
-                cachefilename = sqlcon.kcw_get_sql_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
+                cachefilename = sqlcon.get_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
                                                                          QUALITY_SQL_COLUMN[
                                                                              kcw.kcw_config_get("quality")],
                                                                          kcw.kcw_config_get("tag"), i)
@@ -193,11 +193,11 @@ def main():
 
                     # Add image and its attributes to database.
                     kcw_verbose_print("Adding image to SQL database.\n")
-                    sqlcon.kcw_add_img_entry(kcw.kcw_config_get("sql_table"), basename, preview, score, imgid, tags)
+                    sqlcon.add_img_entry(kcw.kcw_config_get("sql_table"), basename, preview, score, imgid, tags)
             #
             elif kcw_config_get("usecache"):
                 print("No internet connection.\n")
-                cachefilename = sqlcon.kcw_get_sql_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
+                cachefilename = sqlcon.get_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
                                                                          kcw.kcw_config_get("tag"))
                 with open(kcw.kcw_config_get("cachedirectory") + cachefilename, 'rb') as fcach:
                     imgdata = fcach.read()
@@ -215,7 +215,7 @@ def main():
         i += 1
 
     # Cleanup.
-    sqlcon.kcw_sql_disconnect()
+    sqlcon.disconnect()
 
     return 0
 

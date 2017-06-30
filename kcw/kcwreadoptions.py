@@ -188,13 +188,13 @@ def kcw_read_options(config_path):
         elif o == "--clear-cache":
             kcw.kcw_verbose_print("Clearing cache database.\n")
             tmpsqlcon = kcw.db.kcw_create_sql()
-            tmpsqlcon.kcw_sql_connect(kcw.mysql_username,
-                                        kcw.mysql_password,
-                                        kcw.mysql_hostname,
-                                        kcw.mysql_port,
-                                        mysql_database,
-                                        mysql_table)
-            tmpsqlcon.kcw_sql_clear_cache(tmpsqlcon, mysql_table)
+            tmpsqlcon.connect(kcw.mysql_username,
+                              kcw.mysql_password,
+                              kcw.mysql_hostname,
+                              kcw.mysql_port,
+                              mysql_database,
+                              mysql_table)
+            tmpsqlcon.clear_cache(tmpsqlcon, mysql_table)
             tmpsqlcon.close()
             quit(0)
         elif o == "--clear-cache-img":
