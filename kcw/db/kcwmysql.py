@@ -31,7 +31,7 @@ class MySqlConnection:
         self.enabled = True
 
     #
-    def kcw_is_mysql_enabled(self):
+    def is_enabled(self):
         return self.enabled
 
     # Execute SQL command.
@@ -53,7 +53,7 @@ class MySqlConnection:
         return None
 
     # Connect to mysql server.
-    def kcw_sql_connect(self, user, password, host, port, database):
+    def connect(self, user, password, host, port, database):
         try:
             self.con = mysql.connector.connect(user=user, password=password,
                                                  host=host,
@@ -67,20 +67,20 @@ class MySqlConnection:
         return None
 
     #
-    def kcw_sql_disconnect(self):
+    def disconnect(self):
         if self.con:
             self.con.close()
 
     #
-    def kcw_sql_clear_cache(self, table):
-        if not self.kcw_is_mysql_enabled():
+    def clear_cache(self, table):
+        if not self.is_enabled():
             return
 
         self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_TRUNCATE.format(table))
 
     # Check if table has been created.
-    def kcw_sql_check_table_exists(self, table):
-        if not self.kcw_is_mysql_enabled():
+    def check_table_exists(self, table):
+        if not self.is_enabled():
             return False
 
         res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
@@ -88,16 +88,16 @@ class MySqlConnection:
         return res is not None
 
     #
-    def kcw_sql_check_img_exists(self, table, imgid):
-        if not self.kcw_is_mysql_enabled():
+    def check_img_exists(self, table, imgid):
+        if not self.is_enabled():
             return False
 
         res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS)
         return res is not None
 
     #
-    def kcw_sql_num_entries_by_table(self, table):
-        if not self.kcw_is_mysql_enabled():
+    def num_entries_by_table(self, table):
+        if not self.is_enabled():
             return False
 
         res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
@@ -108,8 +108,8 @@ class MySqlConnection:
             return 0
 
     #
-    def kcw_add_img_entry(self, table, url, preview, score, imgid, tags):
-        if not self.kcw_is_mysql_enabled():
+    def add_img_entry(self, table, url, preview, score, imgid, tags):
+        if not self.is_enabled():
             return False
 
         res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
@@ -118,8 +118,8 @@ class MySqlConnection:
         return res is not None
 
     #
-    def kcw_get_sql_cached_img_url_by_id(self, table, imgid):
-        if not self.kcw_is_mysql_enabled():
+    def get_cached_img_url_by_id(self, table, imgid):
+        if not self.is_enabled():
             return None
 
         #
@@ -132,8 +132,8 @@ class MySqlConnection:
             return None
 
     #
-    def kcw_get_sql_cached_img_url_by_tag(self, table, col, tag, offset=0):
-        if not self.kcw_is_mysql_enabled():
+    def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
+        if not self.is_enabled():
             return None
 
         res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))

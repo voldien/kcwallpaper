@@ -55,7 +55,7 @@ class SqliteConnection:
         return None
 
     # Connect to mysql server.
-    def kcw_sql_connect(self, user, password, host, port, database):
+    def connect(self, user, password, host, port, database):
         """
 
         :param user: dummy
@@ -81,7 +81,7 @@ class SqliteConnection:
             self.schema = database
 
             #if not self.kcw_sql_check_table_exists(table):
-            self.kcw_sql_create_tables()
+            self.create_tables()
 
             return self.con
         except Exception as err:
@@ -89,15 +89,15 @@ class SqliteConnection:
             return None
 
     #
-    def kcw_sql_disconnect(self):
+    def disconnect(self):
         self.con.close()
 
     #
-    def kcw_sql_create_tables(self):
+    def create_tables(self):
         self.kcw_sqlite_execute_command(SQL_CREATE_TABLE)
 
     #
-    def kcw_sql_clear_cache(self, table):
+    def clear_cache(self, table):
         self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_TRUNCATE.format(table))
 
     #
@@ -132,7 +132,7 @@ class SqliteConnection:
             return 0
 
     #
-    def kcw_add_img_entry(self, table, url, preview, score, imgid, tags):
+    def add_img_entry(self, table, url, preview, score, imgid, tags):
         if not self.kcw_is_sqlite_enabled():
             return False
 
