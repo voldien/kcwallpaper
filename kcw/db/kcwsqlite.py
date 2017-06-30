@@ -15,14 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import sqlite3
 import time
+import os.path
 
 from dbdef import *
 import kcw.kcwconfiguration
+from kcw.db.kcwsql import SqlConnection
 
-import os.path
 
-
-class SqliteConnection:
+class SqliteConnection (SqlConnection):
     """ """
 
     con = None

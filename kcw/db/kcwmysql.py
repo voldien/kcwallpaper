@@ -15,11 +15,12 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import mysql.connector
+from kcwsql import *
 from dbdef import *
 import time
 
 
-class MySqlConnection:
+class MySqlConnection (SqlConnection):
     """"""
 
     con = None
