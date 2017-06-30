@@ -17,14 +17,18 @@ import kcw
 import kcwmysql
 import kcwsqlite
 
-#
+
+# Factory function.
 def kcw_create_sql(db):
+    """
+    Factory function.
+    :param db: Database type.
+    :return: object instance of sql connection.
+    """
     if db == "mysql":
         return kcwmysql.MySqlConnection()
     elif db == "sqlite":
         return kcwsqlite.SqliteConnection()
     else:
-        pass
-
-
+        raise ValueError("Invalid database")
 
