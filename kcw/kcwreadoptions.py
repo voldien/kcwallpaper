@@ -26,10 +26,12 @@ longoptions = ["version", "verbose", "debug", "tag=", "sleep=", "mysql", "config
                "clear-cache-img", "ssl", "random", "quality=", "advanced_konachan_flag=", "cacheonly"]
 
 
-# read options.
-def kcw_read_options(config_path):
+def read_first_pass():
+    """
 
-    # Read user input
+    :return:
+    """
+
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
     except getopt.GetoptError as err:
@@ -49,11 +51,20 @@ def kcw_read_options(config_path):
             config_path = str(a)
             kcw.kcw_verbose_print("config file override to {}.".format(config_path))
 
-    # print warning.
-    if int(sys.version.split()[0].split(".")[2]) < 9:
-        print("version 2.7.9 or greater is required for using SSL for urllib2. current %s .\n" % sys.version.split()[0])
 
-    # Read config file.
+def read_config_file(config_path):
+    """
+
+    :param config_path:
+    :return:
+    """
+
+    if not config_path:
+        raise ValueError("Invalid path.")
+
+    if not os.path.isfile(config_path):
+        raise ValueError("Path is not a file.")
+
     config_table, err = kcw.sp_parse_file(config_path)
     if config_table is None or err:
         if err:
@@ -62,16 +73,19 @@ def kcw_read_options(config_path):
         else:
             kcw.kcw_errorf("config_table is None.\n")
         exit(1)
+
     # Iterate through all of the attributes
     for k, v in config_table.iteritems():
         if k not in kcw.SUPPORT_CONFIG_QUALIFIER:
+            kcw.kcw_debug_printf("%s is not valid config qualifier.", k)
             continue
 
-        if k == "mysql":
-            kcw.kcw_config_set("mysql", (v == 'True'))
-            kcw.kcw_verbose_print("Using mysql.")
+        #
+        if k == "usesql":
+            kcw.kcw_config_set("usesql", (v == 'True'))
+            kcw.kcw_verbose_print("Using SQL feature.")
         if k == "sql":
-            kcw.kcw_set_db(v)
+            kcw.kcw_config_set("sql", v)
             kcw.kcw_verbose_print("Set sql to %s.", v)
         elif k == "hostname":
             kcw.kcw_config_set("hostname", v)
@@ -80,7 +94,7 @@ def kcw_read_options(config_path):
             kcw.kcw_config_set("port", v)
             kcw.kcw_verbose_print("port : {}.".format(v))
         elif k == "db":
-            mysql_database = v
+            kcw.kcw_config_set("db", v)
             kcw.kcw_verbose_print("DB set to {}.".format(v))
         elif k == "dbtable":
             mysql_table = v
@@ -105,12 +119,14 @@ def kcw_read_options(config_path):
             kcw.kcw_verbose_print("Using caching status {}".format(usecache))
         elif k == "cachedir":
             cachedirectory = os.path.expanduser(v)
+            kcw.kcw_config_set("cachedirectory", cachedirectory)
             kcw.kcw_verbose_print("Cache directory set to {}".format(cachedirectory))
         elif k == "flag":
             flag = v
             kcw.kcw_verbose_print("flag : {}.".format(flag))
         elif k == "fifo":
             wallpaper_fifo = os.path.expanduser(v)
+            kcw.kcw_config_set("wallpaper_fifo", wallpaper_fifo)
             kcw.kcw_verbose_print("Wallpaper fifio set to {}.".format(wallpaper_fifo))
         elif k == "ssl":
             ssl = (v == "True")
@@ -118,12 +134,35 @@ def kcw_read_options(config_path):
         else:
             print ("%s is not a known configuration attribute.\n" % k)
 
+
+# read options.
+def kcw_read_options(config_path):
+    """
+
+    :param config_path:
+    :return:
+    """
+
+    assert config_path
+
+    #
+    read_first_pass()
+
+    # print warning.
+    if int(sys.version.split()[0].split(".")[2]) < 9:
+        print("version 2.7.9 or greater is required for using SSL for urllib2. current %s .\n" % sys.version.split()[0])
+
+    #
+    read_config_file(config_path)
+
     # Read user input
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
     except getopt.GetoptError as err:
         print(err.msg)
+        exit()
 
+    # Iterate through each option.
     for o, a in opts:
         if o in ("-t", "--tag"):
             kcw.kcw_config_set("tag", a)
@@ -148,13 +187,19 @@ def kcw_read_options(config_path):
             kcw.kcw_config_set("cacheonly", True)
         elif o == "--clear-cache":
             kcw.kcw_verbose_print("Clearing cache database.\n")
-            tmpsqlcon = kcw.db.kcw_sql_connect(kcw.mysql_username, kcw.mysql_password, kcw.mysql_hostname,
-                                               kcw.mysql_port, mysql_database, mysql_table)
-            kcw.db.kcw_sql_clear_cache(tmpsqlcon, mysql_table)
+            tmpsqlcon = kcw.db.kcw_create_sql()
+            tmpsqlcon.kcw_sql_connect(kcw.mysql_username,
+                                        kcw.mysql_password,
+                                        kcw.mysql_hostname,
+                                        kcw.mysql_port,
+                                        mysql_database,
+                                        mysql_table)
+            tmpsqlcon.kcw_sql_clear_cache(tmpsqlcon, mysql_table)
             tmpsqlcon.close()
             quit(0)
         elif o == "--clear-cache-img":
             kcw.kcw_verbose_print("Clearing image cache.\n")
+            cachedirectory = kcw.kcw_config_get("cachedir")
             lst = os.listdir(cachedirectory)
             for l in lst:
                 kcw.kcw_verbose_print("Removing file from cache directory %s.\n" % l)
