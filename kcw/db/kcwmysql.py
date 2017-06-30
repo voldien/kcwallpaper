@@ -68,12 +68,12 @@ class MySqlConnection:
 
     #
     def kcw_sql_disconnect(self):
-        if self.con is not None:
+        if self.con:
             self.con.close()
 
     #
     def kcw_sql_clear_cache(self, table):
-        if self.con is None:
+        if not self.kcw_is_mysql_enabled():
             return
 
         self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_TRUNCATE.format(table))
@@ -83,7 +83,7 @@ class MySqlConnection:
         if not self.kcw_is_mysql_enabled():
             return False
 
-        res = self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
+        res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
 
         return res is not None
 
@@ -92,7 +92,7 @@ class MySqlConnection:
         if not self.kcw_is_mysql_enabled():
             return False
 
-        res = self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_CHECK_IMG_EXISTS)
+        res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS)
         return res is not None
 
     #
@@ -100,7 +100,7 @@ class MySqlConnection:
         if not self.kcw_is_mysql_enabled():
             return False
 
-        res = self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
+        res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
 
         if res:
             return res[0]
@@ -112,7 +112,7 @@ class MySqlConnection:
         if not self.kcw_is_mysql_enabled():
             return False
 
-        res = self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
+        res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
             table, url, preview, score, imgid, tags, time.time()))
 
         return res is not None
@@ -123,7 +123,7 @@ class MySqlConnection:
             return None
 
         #
-        res = self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_IMG_BY_IMGID.format(table, imgid))
+        res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_IMG_BY_IMGID.format(table, imgid))
 
         # Check result.
         if res:
@@ -131,12 +131,12 @@ class MySqlConnection:
         else:
             return None
 
-
+    #
     def kcw_get_sql_cached_img_url_by_tag(self, table, col, tag, offset=0):
         if not self.kcw_is_mysql_enabled():
             return None
 
-        res = self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
+        res = self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
 
         # Check result.
         if res:

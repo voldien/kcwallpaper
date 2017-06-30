@@ -56,6 +56,15 @@ class SqliteConnection:
 
     # Connect to mysql server.
     def kcw_sql_connect(self, user, password, host, port, database):
+        """
+
+        :param user: dummy
+        :param password: dummy
+        :param host: dummy
+        :param port: dummy
+        :param database:
+        :return:
+        """
         try:
             path = "%s/kcwsqllite.db" % os.path.expanduser("~/.kcw")
             #kcw.kcwconfiguration.kcw_config_get("cachedirectory")
