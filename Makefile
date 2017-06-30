@@ -31,16 +31,19 @@ install :
 	./sqlinstall.sh
 	$(MKDIR) $(INSTALL_LOCATION)/bin
 	$(CP) *.py $(INSTALL_LOCATION)/lib/$(PYTHONV)
+	$(CP) -r kcw $(INSTALL_LOCATION)/lib/$(PYTHONV)
 	$(CHMOD) +x $(INSTALL_LOCATION)/lib/$(PYTHONV)/$(PYTHONBIN)
 	$(LN) -fs $(INSTALL_LOCATION)/lib/$(PYTHONV)/$(PYTHONBIN)  $(INSTALL_LOCATION)/bin/$(TARGET)
 	$(MKDIR)  $(INSTALL_ETC_LOCATION)
 	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
+	$(CP) kcwallpaper.bc $(INSTALL_ETC_LOCATION)/bash_completion.d
 
 distribution :
 	@echo -n "Creating archive.\n"
 	$(RM) -r $(TARGET)-$(VERSION)
 	$(MKDIR) $(TARGET)-$(VERSION)
-	$(CP) *.py Makefile README.md *.5 *.1 *.sql $(TARGET)-$(VERSION)
+	$(CP) -r kcw $(TARGET)-$(VERSION)
+	$(CP) *.py Makefile README.md *.5 *.1 *.sql kcwallpaper.bc $(TARGET)-$(VERSION)
 	tar cf - $(TARGET)-$(VERSION) | gzip -c > $(TARGET)-$(VERSION).tar.gz
 	$(RM) -r $(TARGET)-$(VERSION)
 
@@ -49,3 +52,5 @@ clean:
 	$(RM) *.pyc
 
 .PHONY : install distribution clean
+
+
