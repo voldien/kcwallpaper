@@ -19,16 +19,16 @@ import sys
 import os
 
 # getopt short options.
-shortopt = "vVDmdt:T:h:P:p:c:F:s:rq:"
+shortopt = "vVDmdt:T:h:P:p:c:F:s:rq:Q"
 
 # getopt long options.
-longoptions = ["version", "verbose", "debug", "tag=", "sleep=", "mysql", "config=", "cachedir=", "fifo=", "clear-cache",
+longoptions = ["version", "verbose", "debug", "quite", "tag=", "sleep=", "mysql", "config=", "cachedir=", "fifo=", "clear-cache",
                "clear-cache-img", "ssl", "random", "quality=", "advanced_konachan_flag=", "cacheonly"]
 
 
 def read_first_pass():
     """
-
+    Read first option pass.
     :return:
     """
 
@@ -36,6 +36,7 @@ def read_first_pass():
         opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
     except getopt.GetoptError as err:
         print(err.message)
+        exit()
 
     for o, a in opts:
         if o in ("-v", "--version"):
@@ -47,6 +48,8 @@ def read_first_pass():
         elif o in ("-D", "--debug"):
             kcw.kcw_verbose_print("Enabled verbose.\n")
             kcw.kcw_set_verbosity(kcw.KCW_DEBUG)
+        elif o in ("-Q", "--quite"):
+            kcw.kcw_set_verbosity(kcw.KCW_QUITE)
         elif o in ("-c", "--config"):
             config_path = str(a)
             kcw.kcw_verbose_print("config file override to {}.".format(config_path))
