@@ -82,6 +82,7 @@ def main():
             # Disable caching if connection fails.
             kcw.kcw_config_set("cachedata", False)
             kcw.kcw_config_set("usecache", False)
+            kcw.kcw_config_set("cacheonly", False)
             sqlcon = None
 
     # Set http protocol.
