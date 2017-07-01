@@ -101,7 +101,7 @@ class SqliteConnection (SqlConnection):
         self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_TRUNCATE.format(table))
 
     #
-    def kcw_sql_check_table_exists(self, table):
+    def check_table_exists(self, table):
         if not self.is_enabled():
             return False
 
@@ -110,7 +110,7 @@ class SqliteConnection (SqlConnection):
         return res is not None
 
     #
-    def kcw_sql_check_img_exists(self, table, imgid):
+    def check_img_exists(self, table, imgid):
         if not self.is_enabled():
             return False
 
@@ -120,7 +120,7 @@ class SqliteConnection (SqlConnection):
         return not(res[0] == 0)
 
     #
-    def kcw_sql_num_entries_by_table(self, table):
+    def num_entries_by_table(self, table):
         if not self.is_enabled():
             return False
 
@@ -142,7 +142,7 @@ class SqliteConnection (SqlConnection):
         return res is not None
 
     #
-    def kcw_get_sql_cached_img_url(self, table):
+    def get_cached_img_url(self, table):
         cursor = self.con.cursor()
         query = "SELECT url FROM %s LIMIT %d 1 OFFSET 0;".format(table, 1)
         cursor.execute(query)
@@ -151,7 +151,7 @@ class SqliteConnection (SqlConnection):
         return ""
 
     #
-    def kcw_get_sql_cached_img_url_by_id(self, table, imgid):
+    def get_cached_img_url_by_id(self, table, imgid):
         if not self.is_enabled():
             return ""
 
@@ -165,7 +165,7 @@ class SqliteConnection (SqlConnection):
             return None
 
     #
-    def kcw_get_sql_cached_img_url_by_tag(self, table, col, tag, offset=0):
+    def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
         if not self.is_enabled():
             return ""
 
