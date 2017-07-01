@@ -15,7 +15,6 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import atexit
-import os
 import signal
 import time
 import urllib2
@@ -56,7 +55,7 @@ def main():
     kcw_verbose_print("Starting wallpaper process.\n")
     swp_args.append("-p")
     swp_args.append(kcw.kcw_config_get("wallpaper_fifo"))
-    if kcw_get_verbosity() >= KCW_VERBOSE:
+    if kcw.kcw_get_verbosity() >= KCW_VERBOSE:
         swp_args.append("--verbose")
     swp = kcw.kcw_create_popen(swp_args)
     if not swp:
