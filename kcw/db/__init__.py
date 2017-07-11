@@ -24,10 +24,13 @@ def kcw_create_sql(db):
     :param db: Database type.
     :return: object instance of sql connection.
     """
-    if db == "mysql":
-        return kcwmysql.MySqlConnection()
-    elif db == "sqlite":
-        return kcwsqlite.SqliteConnection()
-    else:
-        raise ValueError("Invalid database")
+    try:
+        if db == "mysql":
+            return kcwmysql.MySqlConnection()
+        elif db == "sqlite":
+            return kcwsqlite.SqliteConnection()
+        else:
+            raise ValueError("Invalid database")
+    except Exception as err:
+        raise Exception(err.message)
 
