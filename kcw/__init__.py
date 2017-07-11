@@ -46,7 +46,7 @@ KONACHAN_SECURITY_FLAG = {False: "-n", True: "-s"}
 URL_PROTOCOL_QUALIFIER = {False: "http", True: "https"}
 
 # Supported configuration qualifier.
-SUPPORT_CONFIG_QUALIFIER = ["usesql", "sql", "mysql", "hostname", "port", "db", "username", "password", "sleep", "tag",
+SUPPORT_CONFIG_QUALIFIER = ["usesql", "sql", "hostname", "port", "db", "username", "password", "sleep", "tag",
                             "cachedata", "usecache", "cachedir", "flag", "fifo", "ssl"]
 
 # Quality enumerator values.
