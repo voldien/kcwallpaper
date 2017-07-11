@@ -77,7 +77,7 @@ class MySqlConnection (SqlConnection):
         if not self.is_enabled():
             return
 
-        self.kcw_mysql_execute_command(self.con, SQL_FORMAT_QUERY_TRUNCATE.format(table))
+        self.kcw_mysql_execute_command(SQL_FORMAT_QUERY_TRUNCATE.format(table))
 
     # Check if table has been created.
     def check_table_exists(self, table):
