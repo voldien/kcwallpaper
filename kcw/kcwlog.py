@@ -1,4 +1,4 @@
-# verbose.
+# logging.
 # Copyright (C) 2017  Valdemar Lindberg
 #
 # This program is free software: you can redistribute it and/or modify
@@ -25,7 +25,6 @@ KCW_DEBUG = 2
 kcw_verbosity = KCW_QUITE
 
 
-# Set verbosity level of the program.
 def kcw_set_verbosity(verbosity):
     """
     Set logging verbosity level. The higher the
