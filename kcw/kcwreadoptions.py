@@ -23,8 +23,8 @@ import os
 shortopt = "vVDmdt:T:h:P:p:c:F:s:rq:Q"
 
 # getopt long options.
-longoptions = ["version", "verbose", "debug", "quite", "tag=", "sleep=", "mysql", "config=", "cachedir=", "fifo=", "clear-cache",
-               "clear-cache-img", "ssl", "random", "quality=", "advanced_konachan_flag=", "cacheonly"]
+longoptions = ["version", "verbose", "debug", "quite", "tag=", "sleep=", "sql=", "config=", "cachedir=", "fifo=",
+               "clear-cache", "clear-cache-img", "ssl", "random", "quality=", "advanced_konachan_flag=", "cacheonly"]
 
 
 def read_first_pass():
