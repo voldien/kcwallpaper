@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Versions
 MAJOR := 0
 MINOR := 9
@@ -21,7 +20,6 @@ INSTALL_ETC_LOCATION=$(DESTDIR)/etc
 PYTHONV ?= python2.7
 PIP ?= pip
 #
-MYSQL := mysql
 PYTHON := kcwsql.py kcwsimpleparser.py
 PYTHONBIN := kcwallpaper.py
 #
