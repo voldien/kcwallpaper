@@ -19,6 +19,7 @@ PREFIX ?= /usr
 INSTALL_LOCATION=$(DESTDIR)$(PREFIX)
 INSTALL_ETC_LOCATION=$(DESTDIR)/etc
 PYTHONV ?= python2.7
+PIP ?= pip
 #
 MYSQL := mysql
 PYTHON := kcwsql.py kcwsimpleparser.py
@@ -47,10 +48,14 @@ distribution :
 	tar cf - $(TARGET)-$(VERSION) | gzip -c > $(TARGET)-$(VERSION).tar.gz
 	$(RM) -r $(TARGET)-$(VERSION)
 
+dep :
+	$(PIP) install mysql-connector-python
+	$(PIP) install pysqlite
+
 clean:
 	@echo -n "Removing useless files.\n"
 	$(RM) *.pyc
 
-.PHONY : install distribution clean
+.PHONY : install distribution clean dep
 
 
