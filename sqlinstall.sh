@@ -24,7 +24,7 @@
 echo -ne "Do you want to install mysql cache server for konachan wallpaper [y|N].\n>"
 read ans
 
-if [ "$ans" == "n" ]  || [ "$ans" == "N" ] || [ "$ans" == "No" ] || [ -z "$ans"] ; then
+if [ "$ans" == "n" ]  || [ "$ans" == "N" ] || [ "$ans" == "No" ] || [ -z "$ans" ] ; then
 	exit 0
 fi
 
