@@ -81,7 +81,6 @@ kcw_config_set("quality", HIGH_QUALITY)
 
 # Simple wallpaper command line.
 swp_args = ["swp", "--fullscreen", "-C"]
-swp = None
 
 
 # Create directory.
