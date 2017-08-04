@@ -52,7 +52,7 @@ def main():
     signal.signal(signal.SIGINT, catch_signal)
 
     # Create wallpaper process for display pictures.
-    kcw_verbose_print("Starting wallpaper process.\n")
+    kcw_verbose_printf("Starting wallpaper process.\n")
     swp_args.append("-p")
     swp_args.append(kcw.kcw_config_get("wallpaper_fifo"))
     if kcw.kcw_get_verbosity() >= KCW_VERBOSE:
@@ -63,7 +63,7 @@ def main():
 
     # Create cache directory
     if kcw.kcw_config_get("cachedata") and not os.path.isdir(kcw.kcw_config_get("cachedirectory")):
-        kcw_verbose_print("Creating cache directory %s." % kcw.kcw_config_get("cachedirectory"))
+        kcw_verbose_printf("Creating cache directory %s." % kcw.kcw_config_get("cachedirectory"))
         kcw_create_directory(kcw.kcw_config_get("cachedirectory"))
 
     # Create mysql connection and connect. (Optional)
@@ -124,7 +124,7 @@ def main():
                 extrline = output.split()
             elif kcw.kcw_config_get("use_sql") and sqlcon:
                 # Restart the query.
-                kcw_verbose_print("No result from konachan.\n")
+                kcw_verbose_printf("No result from konachan.\n")
                 i = 1
                 continue
 
@@ -193,7 +193,7 @@ def main():
                     cachef.close()
 
                     # Add image and its attributes to database.
-                    kcw_verbose_print("Adding image to SQL database.\n")
+                    kcw_verbose_printf("Adding image to SQL database.\n")
                     sqlcon.add_img_entry(kcw.kcw_config_get("sql_table"), basename, preview, score, imgid, tags)
             #
             elif kcw_config_get("usecache"):
