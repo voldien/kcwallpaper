@@ -58,29 +58,32 @@ def read_first_pass():
 
 def read_config_file(config_path):
     """
-
+    Read configuration file
     :param config_path:
     :return:
     """
 
+    # Check if invalid path.
     if not config_path:
         raise ValueError("Invalid path.")
 
+    # Check if path is invalid.
     if not os.path.isfile(config_path):
         raise ValueError("Path is not a file.")
 
+    # Parse configuration file.
     config_table, err = kcw.sp_parse_file(config_path)
     if not config_table and err:
         map(kcw.kcw_errorf, err)
         exit(1)
 
-    # Iterate through all of the attributes
+    # Iterate through all of the attributes.
     for k, v in config_table.iteritems():
         if k not in kcw.SUPPORT_CONFIG_QUALIFIER:
             kcw.kcw_debug_printf("%s is not valid config qualifier.", k)
             continue
 
-        #
+        # Check each possible key.
         if k == "usesql":
             kcw.kcw_config_set("usesql", (v == 'True'))
             kcw.kcw_verbose_printf("Using SQL feature.")
@@ -140,10 +143,9 @@ def read_config_file(config_path):
             print ("%s is not a known configuration attribute.\n" % k)
 
 
-# read options.
 def kcw_read_options(config_path):
     """
-
+    Read options from user argument.
     :param config_path:
     :return:
     """
