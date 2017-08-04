@@ -70,12 +70,8 @@ def read_config_file(config_path):
         raise ValueError("Path is not a file.")
 
     config_table, err = kcw.sp_parse_file(config_path)
-    if config_table is None or err:
-        if err:
-            for k in err:
-                print(k)
-        else:
-            kcw.kcw_errorf("config_table is None.\n")
+    if not config_table and err:
+        map(kcw.kcw_errorf, err)
         exit(1)
 
     # Iterate through all of the attributes
