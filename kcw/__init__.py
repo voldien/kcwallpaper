@@ -83,36 +83,45 @@ kcw_config_set("quality", HIGH_QUALITY)
 swp_args = ["swp", "--fullscreen", "-C"]
 
 
-# Create directory.
 def kcw_create_directory(directory):
-    kcw_verbose_print("Creating cache directory %s." % directory)
+    """
+    Create directory.
+    :param directory: directory path.
+    """
+    kcw_verbose_printf("Creating cache directory %s." % directory)
     try:
         os.makedirs(directory)
-    except OSError as err:
-        print(err.message)
-        exit(1)
     except Exception as err:
         print(err.message)
         exit(1)
 
 
-# Create process file read from its stdout.
 def kcw_create_popen(cmd):
+    """
+    Create piped process.
+    :param cmd: program and argument string.
+    :return: file if successfully.
+    :exception
+    """
     try:
-        swp = subprocess.Popen(cmd)
-        return swp
+        return subprocess.Popen(cmd)
     except Exception as err:
-        kcw.kcw_errorf("Failed to create swp process for displaying the image. %s." % err)
-        return None
+        raise err
 
 
-# Write to fifo file.
-def kcw_write_fifo(wallpaper_fifo, imgdata):
+def kcw_write_fifo(wallpaper_fifo, pbuf):
+    """
+    Write to SWP wallpaper program FIFO(First in, First out).
+    :param wallpaper_fifo: fifo file path.
+    :param pbuf: data buffer.
+    :return: number of bytes written.
+    """
+    nbytes = 0
     try:
         # Check if file still exist.
         if os.path.exists(wallpaper_fifo):
             f = open(wallpaper_fifo, 'wb')
-            f.write(imgdata)
+            nbytes = f.write(pbuf)
             f.close()
         else:
             print("FIFO file didn't exist.\n")
@@ -121,8 +130,11 @@ def kcw_write_fifo(wallpaper_fifo, imgdata):
         print("Couldn't open fifo file '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
     except AttributeError as err:
-        print("att '%s, %s'.\n", (wallpaper_fifo, err.message))
+        print("Attribute error '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
     except Exception as err:
         print ("Unexpected error:", sys.exc_info()[0])
         exit(1)
+
+    return nbytes
+
