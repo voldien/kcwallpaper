@@ -49,6 +49,7 @@ distribution :
 dep :
 	$(PIP) install mysql-connector-python
 	$(PIP) install pysqlite
+	$(PIP) install urllib2
 
 clean:
 	@echo -n "Removing useless files.\n"
