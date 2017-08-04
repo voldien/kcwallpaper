@@ -28,4 +28,8 @@ if [ "$ans" == "n" ]  || [ "$ans" == "N" ] || [ "$ans" == "No" ] || [ -z "$ans"]
 	exit 0
 fi
 
+if [ "$ans" != "y" ] || [ "$ans" != "Y" ] || [ "$ans" != "Yes" ] ; then
+	exit 0
+fi
+
 mysql -u root -p < init.sql
