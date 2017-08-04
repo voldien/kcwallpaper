@@ -19,15 +19,29 @@ SP_COMMENTS_SYNTAX = "#"
 SP_ASSIGN_SYNTAX = "="
 
 
-# Trim string from left and right only.
 def sp_trim_left_right_trim(line):
+    """
+    Trim string from left and right only.
+    :param line:
+    :return:
+    """
     return line.replace(" ", "")
 
 
-# Return directory table and error array.
-def sp_parse_file(cfilepath):
+def sp_parse_file(path):
+    """
+    Parse simple configuration file.
+    :param path: file path.
+    :return: directory table and error array.
+    """
+
+    # Check if parameter is valid.
+    if not path:
+        raise ValueError("file path requires to be a none null parameter.")
+
+    # Load file and extract configuration syntax.
     try:
-        f = open(cfilepath, 'r')
+        f = open(path, 'r')
         table, err = sp_extract_grammar(f)
         f.close()
         return table, err
@@ -38,8 +52,12 @@ def sp_parse_file(cfilepath):
     return None, None
 
 
-# Remove comment from line.
 def sp_remove_comment(line):
+    """
+    Remove comment from line.
+    :param line: line statement.
+    :return: string without comment.
+    """
     com = line.find(SP_COMMENTS_SYNTAX)
     if com == -1:
         return line
@@ -47,15 +65,17 @@ def sp_remove_comment(line):
         return line[0:com]
 
 
-# Extract grammar rule.
-# return dictionary of each attribute and value.
 def sp_extract_grammar(f):
-
+    """
+    Extract grammar rule.
+    :param f: readable file.
+    :return: dictionary of each attribute and value.
+    """
     table = {}
     err = []
     linecur = 0
 
-    #
+    # Extract all lines.
     lines = f.read().splitlines()
 
     # Iterate line per line.
@@ -81,7 +101,7 @@ def sp_extract_grammar(f):
             err.append("Error on line %s. No right argument > \"%s\"" % (str(linecur), line))
             return None, err
 
-        # Chec if attribute is valid.
+        # Check if attribute is valid.
         if larg.isspace() or len(larg) == 0:
             err.append("Error on line %s. No left argument > \"%s\"" % (str(linecur), line))
             return None, err
