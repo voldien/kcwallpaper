@@ -191,9 +191,17 @@ def main():
                 if kcw.kcw_config_get("cachedata") and sqlcon:
                     # Create image cache file path.
                     fpath = "%s/%s" % (kcw.kcw_config_get("cachedirectory"), basename)
-                    cachef = open(fpath, 'wb')
-                    cachef.write(imgdata)
-                    cachef.close()
+
+                    # Save cached image to file.
+                    try:
+                        cachef = open(fpath, 'wb')
+                        cachef.write(imgdata)
+                        cachef.close()
+                    except IOError as ioex:
+                        kcw_errorf("Failed to cache downloaded image to {}.\n\t{}.\n", fpath, ioex.message)
+                    #
+                    kcw_verbose_printf("Cached the downloaded image file to {}.\n",
+                                       fpath)
 
                     # Add image and its attributes to database.
                     kcw_verbose_printf("Adding image to SQL database.\n")
