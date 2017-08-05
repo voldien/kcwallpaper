@@ -16,12 +16,12 @@
 
 import sys
 
-#
+# Verbosity level.
 KCW_QUITE = 0
 KCW_VERBOSE = 1
 KCW_DEBUG = 2
 
-#
+# Verbosity level.
 kcw_verbosity = KCW_QUITE
 
 
