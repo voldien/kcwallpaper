@@ -58,8 +58,11 @@ def main():
     # Display wallpaper verbose only in debug mode.
     if kcw.kcw_get_verbosity() >= KCW_DEBUG:
         swp_args.append("--verbose")
-    swp = kcw.kcw_create_popen(swp_args)
-    if not swp:
+
+    try:
+        swp = kcw.kcw_create_popen(swp_args)
+    except Exception as err:
+        kcw_errorf("Failed to create swp process for displaying the image.\n\t {}.\n", err)
         quit(1)
 
     # Create cache directory
