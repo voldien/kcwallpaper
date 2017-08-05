@@ -124,16 +124,16 @@ def kcw_write_fifo(wallpaper_fifo, pbuf):
             nbytes = f.write(pbuf)
             f.close()
         else:
-            print("FIFO file didn't exist.\n")
+            kcw_errorf("FIFO file didn't exist.\n")
             exit(1)
     except IOError as err:
-        print("Couldn't open fifo file '%s, %s'.\n", (wallpaper_fifo, err.message))
+        kcw_errorf("Couldn't open fifo file '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
     except AttributeError as err:
-        print("Attribute error '%s, %s'.\n", (wallpaper_fifo, err.message))
+        kcw_errorf("Attribute error '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
     except Exception as err:
-        print ("Unexpected error:", sys.exc_info()[0])
+        kcw_errorf("Unexpected error:", sys.exc_info()[0])
         exit(1)
 
     return nbytes
