@@ -84,6 +84,7 @@ def main():
 
         except Exception as err:
             # Disable caching if connection fails.
+            kcw.kcw_errorf("Caching failed, {}.\n", err.message)
             kcw.kcw_config_set("cachedata", False)
             kcw.kcw_config_set("usecache", False)
             kcw.kcw_config_set("cacheonly", False)
