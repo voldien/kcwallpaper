@@ -18,7 +18,7 @@ PREFIX ?= /usr
 INSTALL_LOCATION=$(DESTDIR)$(PREFIX)
 INSTALL_ETC_LOCATION=$(DESTDIR)/etc
 PYTHONV ?= python2.7
-PIP ?= pip
+PIP ?= pip2
 #
 PYTHON := kcwsql.py kcwsimpleparser.py
 PYTHONBIN := kcwallpaper.py
