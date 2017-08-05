@@ -25,36 +25,25 @@ from kcw.db.kcwsql import SqlConnection
 class SqliteConnection (SqlConnection):
     """ """
 
-    con = None
-    enabled = True
     schema = None
 
     #
     def __init__(self):
-        self.con = None
-        self.enabled = True
+        super(SqliteConnection, self).__init__()
 
-    #
-    def is_enabled(self):
-        return self.enabled
-
-    # Execute SQL command.
-    def kcw_sqlite_execute_command(self, query):
+    def execute_command(self, query):
         try:
-            cur = self.con.cursor()
+            cur = self.connection.cursor()
             cur.execute(query)
-            self.con.commit()
+            self.connection.commit()
             res = cur.fetchone()
             cur.close()
-            del cur
             return res
         except Exception as err:
-            print(err.message)
-            print(query)
+            kcw.kcw_errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
 
         return None
 
-    # Connect to mysql server.
     def connect(self, user, password, host, port, database):
         """
 
@@ -71,92 +60,72 @@ class SqliteConnection (SqlConnection):
             #
 
             if os.path.exists(path):
-                kcw.kcw_verbose_print("Loading database at %s" % path)
+                kcw.kcw_verbose_printf("Loading database at %s" % path)
             else:
-                kcw.kcw_verbose_print("Created database at %s" % path)
-            self.con = sqlite3.connect(database=path)
-
-
+                kcw.kcw_verbose_printf("Created database at %s" % path)
+            self.connection = sqlite3.connect(database=path)
 
             self.schema = database
 
-            #if not self.kcw_sql_check_table_exists(table):
             self.create_tables()
 
-            return self.con
+            return self.connection
         except Exception as err:
             print(err.message)
             return None
 
-    #
     def disconnect(self):
-        self.con.close()
+        self.connection.close()
 
-    #
     def create_tables(self):
-        self.kcw_sqlite_execute_command(SQL_CREATE_TABLE)
+        self.execute_command(SQL_CREATE_TABLE)
 
-    #
     def clear_cache(self, table):
-        self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_TRUNCATE.format(table))
+        self.execute_command(SQL_FORMAT_QUERY_TRUNCATE.format(table))
 
-    #
     def check_table_exists(self, table):
-        if not self.is_enabled():
-            return False
 
-        res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
+        res = self.execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
 
         return res is not None
 
-    #
     def check_img_exists(self, table, imgid):
-        if not self.is_enabled():
-            return False
 
         #
-        res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS.format(table, imgid))
+        res = self.execute_command(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS.format(table, imgid))
+        if not res:
+            return False
 
         return not(res[0] == 0)
 
-    #
     def num_entries_by_table(self, table):
-        if not self.is_enabled():
-            return False
 
-        res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
+        res = self.execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
 
         if res:
             return res[0]
         else:
             return 0
 
-    #
     def add_img_entry(self, table, url, preview, score, imgid, tags):
-        if not self.is_enabled():
-            return False
 
-        res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
+        res = self.execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
             table, url, preview, score, imgid, tags, time.time()))
 
         return res is not None
 
-    #
     def get_cached_img_url(self, table):
-        cursor = self.con.cursor()
-        query = "SELECT url FROM %s LIMIT %d 1 OFFSET 0;".format(table, 1)
-        cursor.execute(query)
-        cursor.fetchall()
-        cursor.close()
-        return ""
 
-    #
+        query = "SELECT url FROM %s LIMIT %d 1 OFFSET 0;".format(table, 1)
+        #
+        res = self.execute_command(query)
+
+        return res
+
     def get_cached_img_url_by_id(self, table, imgid):
-        if not self.is_enabled():
-            return ""
 
         #
-        res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_IMG_BY_IMGID.format(table, imgid))
+        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_IMGID.format(table, imgid))
 
         # Check result.
         if res:
@@ -164,12 +133,9 @@ class SqliteConnection (SqlConnection):
         else:
             return None
 
-    #
     def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
-        if not self.is_enabled():
-            return ""
 
-        res = self.kcw_sqlite_execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
+        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
 
         # Check result.
         if res:
