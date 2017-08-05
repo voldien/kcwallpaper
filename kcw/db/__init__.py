@@ -17,11 +17,10 @@ import kcwmysql
 import kcwsqlite
 
 
-# Factory function.
 def kcw_create_sql(db):
     """
-    Factory function.
-    :param db: Database type.
+    Factory function for creating sql connection.
+    :param db: Database type as string.
     :return: object instance of sql connection.
     """
     try:
@@ -32,5 +31,5 @@ def kcw_create_sql(db):
         else:
             raise ValueError("Invalid database")
     except Exception as err:
-        raise Exception(err.message)
+        raise err
 
