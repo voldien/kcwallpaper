@@ -83,9 +83,9 @@ kcw_config_set("quality", HIGH_QUALITY)
 swp_args = ["swp", "--fullscreen", "-C"]
 
 
-def kcw_create_directory(directory):
+def kcw_create_cache_directory(directory):
     """
-    Create directory.
+    Create cache directory.
     :param directory: directory path.
     """
     kcw_verbose_printf("Creating cache directory %s." % directory)

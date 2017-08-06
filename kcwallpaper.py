@@ -68,7 +68,7 @@ def main():
     # Create cache directory
     if kcw.kcw_config_get("cachedata") and not os.path.isdir(kcw.kcw_config_get("cachedirectory")):
         kcw_verbose_printf("Creating cache directory %s." % kcw.kcw_config_get("cachedirectory"))
-        kcw_create_directory(kcw.kcw_config_get("cachedirectory"))
+        kcw_create_cache_directory(kcw.kcw_config_get("cachedirectory"))
 
     # Create mysql connection and connect. (Optional)
     if kcw.kcw_config_get("use_sql"):
