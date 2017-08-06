@@ -108,8 +108,13 @@ def main():
     # crash otherwise.
     time.sleep(0.2)
 
+    # Main verbose.
+    kcw_verbose_printf("Starting main wallpaper loop with tag set as '{}'", kcw.kcw_config_get("tag"))
+
     # Main program loop.
     while isalive:
+        kcw_verbose_printf("\n-----------------------------------\n")
+        kcw_verbose_printf("Starting loading image with index {}.\n", i)
 
         # Don't query in 'cacheonly' mode.
         if not kcw.kcw_config_get("cacheonly"):
@@ -153,33 +158,38 @@ def main():
             else:
                 cachefilename = sqlcon.get_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
                                                                     QUALITY_SQL_COLUMN[
-                                                                    kcw.kcw_config_get("quality")],
-                                                                    kcw.kcw_config_get("tag"), i)
-
+                                                                kcw.kcw_config_get("quality")],
+                                                                kcw.kcw_config_get("tag"), i)
+            # Check if failed fetch path.
             if not cachefilename:
-                i += 1
+                i = 0
                 continue
 
-            #
-            fpath = "{}/{}".format(kcw.kcw_config_get("cachedirectory"), cachefilename)
-            kcw_verbose_print("Using cached file %s.\n", fpath)
+            # Create cache image path.
+            fpath = "{}/{}".format(kcw.kcw_config_get("cachedirectory"), cachefilename).encode()
+
+            # Load image.
+            kcw_verbose_printf("Using cached file {}.\n", fpath)
             try:
                 with open(fpath, 'rb') as fcach:
                     imgdata = fcach.read()
                 fcach.close()
+            except IOError as err:
+                kcw_errorf(err.message)
             except Exception as err:
                 kcw_errorf(err.message)
+
         else:
             if kcw.kcw_config_get("hasInternet"):
                 try:
                     # Create URL string.
                     url = "{}://www.{}".format(http_pro, fetchurl)
-                    kcw_verbose_print("Downloading image from URL : %s\n", fetchurl)
                     # basename for the image file.
                     basename = os.path.basename(url).decode().replace("%20", " ")
                     # Create connection.
                     response = urllib2.urlopen(url)
                     # Download all data.
+                    kcw_verbose_printf("Downloading image from URL : {}\n", fetchurl)
                     imgdata = response.read()
                     # Release connection.
                     response.close()
