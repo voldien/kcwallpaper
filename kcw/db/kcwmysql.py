@@ -22,10 +22,10 @@ import time
 
 
 class MySqlConnection (SqlConnection):
-    """"""
-
-    con = None
-    enabled = True
+    """
+    MySQLConnection is a SqlConnection
+    that uses MySQL for storing cache data.
+    """
 
     #
     def __init__(self):
@@ -47,16 +47,13 @@ class MySqlConnection (SqlConnection):
     # Connect to mysql server.
     def connect(self, user, password, host, port, database):
         try:
-            self.con = mysql.connector.connect(user=user, password=password,
-                                                 host=host,
-                                                 database=database)
+            self.connection = mysql.connector.connect(user=user, password=password, host=host, database=database)
             return self.con
         except mysql.connector.Error as err:
             print("Couldn't connect to a mysql server %s:%d %s." % (host, port, err.msg))
             print("Caching can not be used without MySQL.")
         except Exception as err:
             print("Couldn't connect to mysql, %s." % err.message)
-        return None
 
         raise Exception("Failed to connect.\n")
 
