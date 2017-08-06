@@ -23,7 +23,10 @@ from kcw.db.kcwsql import SqlConnection
 
 
 class SqliteConnection (SqlConnection):
-    """ """
+    """
+    SQLite is a lightweight sql server that
+    does not require any server running.
+    """
 
     schema = None
 
@@ -46,7 +49,7 @@ class SqliteConnection (SqlConnection):
 
     def connect(self, user, password, host, port, database):
         """
-
+        Connect to mysql server.
         :param user: dummy
         :param password: dummy
         :param host: dummy
