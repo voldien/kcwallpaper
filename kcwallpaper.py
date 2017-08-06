@@ -213,11 +213,17 @@ def main():
                 #
                 kcw.kcw_errorf("No internet connection.\n")
                 cachefilename = sqlcon.get_cached_img_url_by_tag(kcw.kcw_config_get("sql_table"),
-                                                                         kcw.kcw_config_get("tag"))
-                with open(kcw.kcw_config_get("cachedirectory") + cachefilename, 'rb') as fcach:
-                    imgdata = fcach.read()
-                fcach.close()
-            # Wait intill internet has returned
+                                                                    kcw.kcw_config_get("tag"))
+                #
+                fpath = "{}/{}".format(kcw.kcw_config_get("cachedirectory"), cachefilename)
+                try:
+                    with open(fpath, 'rb') as fcach:
+                        imgdata = fcach.read()
+                    fcach.close()
+                except IOError as err:
+                    pass
+
+            # Wait in till internet has returned
             else:
                 print("No internet connection.\n")
                 exit(1)
