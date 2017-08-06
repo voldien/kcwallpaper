@@ -152,14 +152,14 @@ def kcw_read_options(config_path):
 
     assert config_path
 
-    #
+    # Read first argument pass.
     read_first_pass()
 
     # print warning.
     if int(sys.version.split()[0].split(".")[2]) < 9:
         print("version 2.7.9 or greater is required for using SSL for urllib2. current %s .\n" % sys.version.split()[0])
 
-    #
+    # Read configuration file.
     read_config_file(config_path)
 
     # Read user input
