@@ -69,7 +69,7 @@ def read_config_file(config_path):
 
     # Check if path is invalid.
     if not os.path.isfile(config_path):
-        raise ValueError("Path is not a file.")
+        raise ValueError("Configuration file path is not a file.")
 
     # Parse configuration file.
     config_table, err = kcw.sp_parse_file(config_path)
