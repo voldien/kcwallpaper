@@ -1,0 +1,56 @@
+'\" konachan wallpaper configuration file manual.
+.\" Copyright (c) 2017, valdemar lindberg
+.\"
+.\" %%%LICENSE_START(GPLv3+_DOC_FULL)
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 3 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, see
+.\" <http://www.gnu.org/licenses/>.
+.\" %%%LICENSE_END
+
+
+.pc
+.TH kcwallpaper 5 "7 august 2017" "1.0" "User Commands"
+.SH NAME
+kcwallpaper - configuration file.
+.SH DESCRIPTION
+The default configuration file is named kcw.conf. The '.conf' extension prefix is not manditory.
+The configuration file will be used as for the default setting when starting up the program. Any of the settings in the configuration file can be overridden by using the command line options.
+
+The default configuration file path is
+.BR /etc/kcw.conf
+
+.SH FILE FORMAT
+The configuration file uses a simple parser. It only supports attribute and value.
+Each variable attribute has to be define on a single line. This is because the parser will iterate through
+each line and extract variable name and its value. It will remove comments and trim any uneccessary whitespace because extracting. The configuration parser is case sensative.
+
+The following is the format for which the simpler parsing supports:
+.TP
+.BR variable " " = " " value
+
+
+
+.SH "SEE ALSO"
+\&\fIkcwallpaper\fR\|(1), \fIkonachan\fR\|(1), \fIpython2.7\fR\|(1)
+.TP
+The source code for the configuration interpreter can be found at https://github.com/voldien/sp-simple-parser.
+
+
+.SH AUTHOR
+	Valdemar Lindberg (voldiekami@gmail.com)
+
