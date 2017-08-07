@@ -178,7 +178,7 @@ def kcw_read_options(config_path):
             kcw.kcw_config_set("sleep", float(a))
             kcw.kcw_verbose_printf("Sleep time override to {}.".format(float(a)))
         elif o in "cachedir":
-            kcw.kcw_config_set("sleep", os.path.expanduser(a))
+            kcw.kcw_config_set("cachedirectory", os.path.expanduser(a))
             kcw.kcw_verbose_printf("Cache directory override to {}.".format(os.path.expanduser(a)))
         elif o in ("-m", "--sql"):
             kcw.kcw_config_set("sql", a)
@@ -198,12 +198,12 @@ def kcw_read_options(config_path):
                 kcw.kcw_config_get("sql_hostname"),
                 kcw.kcw_config_get("sql_port"),
                 kcw.kcw_config_get("sql_database"))
-            cachecon.clear_cache(cachecon, kcw.kcw_config_get("table"))
+            cachecon.clear_cache(kcw.kcw_config_get("sql_table"))
             cachecon.disconnect()
             quit(0)
         elif o == "--clear-cache-img":
             kcw.kcw_verbose_printf("Clearing image cache.\n")
-            cachedirectory = kcw.kcw_config_get("cachedir")
+            cachedirectory = kcw.kcw_config_get("cachedirectory")
             lst = os.listdir(cachedirectory)
             for l in lst:
                 kcw.kcw_verbose_printf("Removing file from cache directory %s.\n" % l)
