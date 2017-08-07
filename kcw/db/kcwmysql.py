@@ -40,7 +40,7 @@ class MySqlConnection (SqlConnection):
             cur.close()
             return res
         except mysql.connector.Error as err:
-            kcw.kcw_errorf("Failed to perform query '{}'\n\terror : {}.\n", query, err.message)
+            kcw.errorf("Failed to perform query '{}'\n\terror : {}.\n", query, err.message)
 
         return None
 

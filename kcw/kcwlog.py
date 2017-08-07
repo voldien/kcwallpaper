@@ -25,7 +25,7 @@ KCW_DEBUG = 2
 kcw_verbosity = KCW_QUITE
 
 
-def kcw_set_verbosity(verbosity):
+def set_verbosity(verbosity):
     """
     Set logging verbosity level. The higher the
     more information gets logged.
@@ -36,7 +36,7 @@ def kcw_set_verbosity(verbosity):
     kcw_verbosity = verbosity
 
 
-def kcw_get_verbosity():
+def get_verbosity():
     """
     Get current verbosity level of the program
     :return: verbosity level as int.
@@ -45,7 +45,7 @@ def kcw_get_verbosity():
     return kcw_verbosity
 
 
-def kcw_errorf(fmt, *kwargs):
+def errorf(fmt, *kwargs):
     """
     Print error format. The string will be written
     into stderr rather than the default with print.
@@ -56,7 +56,7 @@ def kcw_errorf(fmt, *kwargs):
     return sys.stderr.write(fmt.format(*kwargs))
 
 
-def kcw_logf(verbosity, fmt, *kwargs):
+def logf(verbosity, fmt, *kwargs):
     """
     Log format message based on the verbosity.
     :param verbosity: verbosity of the message.
@@ -65,7 +65,7 @@ def kcw_logf(verbosity, fmt, *kwargs):
     :return:
     """
     nchar = 0
-    if kcw_get_verbosity() >= verbosity:
+    if get_verbosity() >= verbosity:
         log = fmt.format(*kwargs)
         nchar = len(log)
         print(log)
@@ -73,22 +73,22 @@ def kcw_logf(verbosity, fmt, *kwargs):
     return nchar
 
 
-def kcw_verbose_printf(fmt, *kwargs):
+def verbose_printf(fmt, *kwargs):
     """
     Verbose logging.
     :param fmt:
     :param kwargs:
     :return: number of character.
     """
-    return kcw_logf(KCW_VERBOSE, fmt, *kwargs)
+    return logf(KCW_VERBOSE, fmt, *kwargs)
 
 
-def kcw_debug_printf(fmt, *kwargs):
+def debug_printf(fmt, *kwargs):
     """
     Debug logging.
     :param fmt:
     :param kwargs:
     :return: number of character.
     """
-    return kcw_logf(KCW_DEBUG, fmt, *kwargs)
+    return logf(KCW_DEBUG, fmt, *kwargs)
 

@@ -59,36 +59,36 @@ QUALITY_SQL_COLUMN = {LOW_QUALITY: "preview", MEDIUM_QUALITY: "sample", HIGH_QUA
 kc_array_args = ["konachan", "-S", "-f", "\"url sample preview score id tags\"", "-t \"%s\"", "-p %d", "--limit=1"]
 
 # Default initialization config Variables.
-kcw_config_set("ssl", True)
-kcw_config_set("hasInternet", True)
-kcw_config_set("cacheonly", False)
-kcw_config_set("wallpaper_fifo", os.path.expanduser("~/.kcw/wallfifo0"))
-kcw_config_set("config_file", CONFIG_FIELPATH + CONFIG_FIELNAME)
-kcw_config_set("usecache", DEFAULT_USECACHE)
-kcw_config_set("cachedata", DEFAULT_CACHEDATA)
-kcw_config_set("cachedirectory", DEFAULT_CACHEFILEDIRECTORY)
-kcw_config_set("sql", "sqlite")
-kcw_config_set("use_sql", DEFAULT_USE_MYSQL)
-kcw_config_set("sql_database", 'konachan')
-kcw_config_set("sql_hostname", DEFAULT_MYSQL_HOSTNAME)
-kcw_config_set("sql_username", DEFAULT_MYSQL_USERNAME)
-kcw_config_set("sql_password", DEFAULT_MYSQL_PASSWORD)
-kcw_config_set("sql_port", DEFAULT_MYSQL_PORT)
-kcw_config_set("sql_table", "img")
-kcw_config_set("tag", DEFAULT_SEARCHTAG)
-kcw_config_set("sleep", DEFAULT_SLEEPTIME)
-kcw_config_set("quality", HIGH_QUALITY)
+config_set("ssl", True)
+config_set("hasInternet", True)
+config_set("cacheonly", False)
+config_set("wallpaper_fifo", os.path.expanduser("~/.kcw/wallfifo0"))
+config_set("config_file", CONFIG_FIELPATH + CONFIG_FIELNAME)
+config_set("usecache", DEFAULT_USECACHE)
+config_set("cachedata", DEFAULT_CACHEDATA)
+config_set("cachedirectory", DEFAULT_CACHEFILEDIRECTORY)
+config_set("sql", "sqlite")
+config_set("use_sql", DEFAULT_USE_MYSQL)
+config_set("sql_database", 'konachan')
+config_set("sql_hostname", DEFAULT_MYSQL_HOSTNAME)
+config_set("sql_username", DEFAULT_MYSQL_USERNAME)
+config_set("sql_password", DEFAULT_MYSQL_PASSWORD)
+config_set("sql_port", DEFAULT_MYSQL_PORT)
+config_set("sql_table", "img")
+config_set("tag", DEFAULT_SEARCHTAG)
+config_set("sleep", DEFAULT_SLEEPTIME)
+config_set("quality", HIGH_QUALITY)
 
 # Simple wallpaper command line.
 swp_args = ["swp", "--fullscreen", "-C"]
 
 
-def kcw_create_cache_directory(directory):
+def create_cache_directory(directory):
     """
     Create cache directory.
     :param directory: directory path.
     """
-    kcw_verbose_printf("Creating cache directory %s." % directory)
+    verbose_printf("Creating cache directory %s." % directory)
     try:
         os.makedirs(directory)
     except Exception as err:
@@ -96,7 +96,7 @@ def kcw_create_cache_directory(directory):
         exit(1)
 
 
-def kcw_create_popen(cmd):
+def create_popen(cmd):
     """
     Create piped process.
     :param cmd: program and argument string.
@@ -109,7 +109,7 @@ def kcw_create_popen(cmd):
         raise err
 
 
-def kcw_write_fifo(wallpaper_fifo, pbuf):
+def write_fifo(wallpaper_fifo, pbuf):
     """
     Write to SWP wallpaper program FIFO(First in, First out).
     :param wallpaper_fifo: fifo file path.
@@ -124,16 +124,16 @@ def kcw_write_fifo(wallpaper_fifo, pbuf):
             nbytes = f.write(pbuf)
             f.close()
         else:
-            kcw_errorf("FIFO file didn't exist.\n")
+            errorf("FIFO file didn't exist.\n")
             exit(1)
     except IOError as err:
-        kcw_errorf("Couldn't open fifo file '%s, %s'.\n", (wallpaper_fifo, err.message))
+        errorf("Couldn't open fifo file '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
     except AttributeError as err:
-        kcw_errorf("Attribute error '%s, %s'.\n", (wallpaper_fifo, err.message))
+        errorf("Attribute error '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
     except Exception as err:
-        kcw_errorf("Unexpected error:", sys.exc_info()[0])
+        errorf("Unexpected error:", sys.exc_info()[0])
         exit(1)
 
     return nbytes
