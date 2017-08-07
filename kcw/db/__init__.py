@@ -17,7 +17,7 @@ import kcwmysql
 import kcwsqlite
 
 
-def kcw_create_sql(db):
+def create_sql(db):
     """
     Factory function for creating sql connection.
     :param db: Database type as string.

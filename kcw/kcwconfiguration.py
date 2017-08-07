@@ -17,23 +17,23 @@ import kcw.kcwlog
 config = {}
 
 
-def kcw_config_set(key, v):
+def config_set(key, v):
     """
     Set configuration with key attribute and value associated.
     :param key: key as string.
     :param v:
     """
     global config
-    kcw.kcwlog.kcw_debug_printf("Set ({},{})".format(key, v))
+    kcw.kcwlog.debug_printf("Set ({},{})".format(key, v))
     config[key] = v
 
 
-def kcw_config_get(key):
+def config_get(key):
     """
     Get configuration by key value.
     :param key: key as string.
     :return: value associated with the key if exists.
     """
     global config
-    kcw.kcwlog.kcw_debug_printf("Get ({})".format(key))
+    kcw.kcwlog.debug_printf("Get ({})".format(key))
     return config[key]

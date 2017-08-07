@@ -41,7 +41,7 @@ class SqliteConnection (SqlConnection):
             cur.close()
             return res
         except Exception as err:
-            kcw.kcw_errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
+            kcw.errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
 
         return None
 
@@ -61,9 +61,9 @@ class SqliteConnection (SqlConnection):
             #
 
             if os.path.exists(path):
-                kcw.kcw_verbose_printf("Loading database at %s" % path)
+                kcw.verbose_printf("Loading database at %s" % path)
             else:
-                kcw.kcw_verbose_printf("Created database at %s" % path)
+                kcw.verbose_printf("Created database at %s" % path)
             self.connection = sqlite3.connect(database=path)
 
             self.schema = database
