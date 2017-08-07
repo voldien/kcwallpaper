@@ -98,7 +98,6 @@ def main():
     i = 0
     isalive = True
     imgid = 0
-    response = None
     imgdata = None
     extrline = None
     kc_cmd = reduce(lambda a, x: a + " " + x, kc_array_args)
