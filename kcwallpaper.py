@@ -102,10 +102,13 @@ def main():
     imgdata = None
     extrline = None
     kc_cmd = reduce(lambda a, x: a + " " + x, kc_array_args)
-    get_kcw_cmd = lambda i: kc_cmd % (kcw.kcw_config_get("tag"), i)
 
-    # Sleep in order allow the swp program to start up properly. Causes it
-    # crash otherwise.
+    def compute_kc_cmd(j):
+        return kc_cmd % (kcw.kcw_config_get("tag"), j)
+    get_kcw_cmd = compute_kc_cmd
+
+    # Sleep in order allow the swp program to start up properly.
+    # It cause the program to crash otherwise.
     time.sleep(0.2)
 
     # Main verbose.
