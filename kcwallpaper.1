@@ -1,0 +1,107 @@
+'\" konachan wallpaper program manual.
+.\" Copyright (c) 2017, valdemar lindberg
+.\"
+.\" %%%LICENSE_START(GPLv3+_DOC_FULL)
+.\" This is free documentation; you can redistribute it and/or
+.\" modify it under the terms of the GNU General Public License as
+.\" published by the Free Software Foundation; either version 3 of
+.\" the License, or (at your option) any later version.
+.\"
+.\" The GNU General Public License's references to "object code"
+.\" and "executables" are to be interpreted as the output of any
+.\" document formatting or typesetting system, including
+.\" intermediate and printed output.
+.\"
+.\" This manual is distributed in the hope that it will be useful,
+.\" but WITHOUT ANY WARRANTY; without even the implied warranty of
+.\" MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+.\" GNU General Public License for more details.
+.\"
+.\" You should have received a copy of the GNU General Public
+.\" License along with this manual; if not, see
+.\" <http://www.gnu.org/licenses/>.
+.\" %%%LICENSE_END
+
+
+.pc
+.TH kcwallpaper 1 "7 August 2017" "1.0" "User Commands"
+.SH NAME
+kcwallpaper - konachan wallpaper
+
+.SH SYNOPSIS
+.B kcwallpaper [ -v ]
+
+Only the most common options are listed here; see below for the
+remainder.
+
+.SH DESCRIPTION
+kcwallpaper is a wallpaper/slideshow program for displaying images from http://www.konachan.net
+It support caching of the downloaded images in order to reuse them. This is done by using SQL in order to store meta data assoicated with each of the images and its filename on the storage device.
+
+.SH OPTIONS
+
+.SH 1. COMMAND-LINE Options
+
+.TP
+.BR \-v ", " \-\-version
+Print the version of the command and exit.
+.TP
+.BR \-V ", " \-\-verbose
+Set logging to verbose mode.
+.TP
+.BR \-D ", " \-\-debug
+Set logging to debug mode. This will log everything.
+.TP
+.BR \-Q ", " \-\-quite
+Set logging to quite mode. This will oppress any logging.
+.TP
+.BR \-t ", " \-\-tag =\fITAGS\fR
+Set search tag used for fetching from konachan or from sql cache.
+.TP
+.BR \-T ", " \-\-sleep=\fISECONDS\fR
+Time sleeped between each image swap.
+.TP
+.BR \-m ", " \-\-sql =\fISQL\fR
+Override the default sql for used for storing the cached meta data. 
+.TP
+.BR \-c ", " \-\-config =\fIPATH\fR
+Override the default configuration file path.
+.TP
+.BR \-\-cachedir =\fIPATH\fR
+Override the cache directory for where the images gets saved to.
+.TP
+.BR \-F ", " \-\-fifo =\fIPATH\fR
+Override the file path of the FIFO file. Where the image data will be written to.
+.TP
+.BR \-\-clear-cache
+Clear cache from cache meta data stored in the sql server.
+.TP
+.BR \-\-clear-cache-img
+Clears tcached images from cache directory.
+.TP
+.BR \-r ", " \-\-random
+Display the images in a random order.
+.TP
+.BR \-q ", " \-\-quality =\fIlow,medium,high\fR " " or " " \fIQUALITYLEVEL\fR
+Set quality of the images to be displayed.
+.TP
+.BR \-A ", " \-\-advanced_konachan_flag =\fROPTIONS\fR
+Concatenate option to sub program konachan argument option. This is used for modifing the konachan default behavior in the kcwallpaper program.
+.TP
+.BR \-v ", " \-\-cacheonly
+Use the cached data only. This does not require an internet connection. Because it uses the metadata from specified sql for querying the file path of the cached images on the local host.
+
+.SH EXIT STATUS
+If exist status is equal 0 than the program exited successfully.
+
+.SH NOTES
+The python script uses the sub programs swp and konachan. These are two dedicate single usage program.
+The swp program is used for displaying the images and swapping the images when writting to the FIFO file. Whereas the konachan is the program for query meta data assoicated with images from https://www.konachan.net.
+
+.SH "SEE ALSO"
+\&\fIkcwallpaper\fR\|(5), \fIswp\fR\|(1), \fIkonachan\fR\|(1), \fIpython2.7\fR\|(1)
+
+
+.SH AUTHOR
+	Valdemar Lindberg (voldiekami@gmail.com)
+
