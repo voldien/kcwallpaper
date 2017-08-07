@@ -28,10 +28,8 @@ class SqliteConnection (SqlConnection):
     does not require any server running.
     """
 
-    schema = None
-
-    #
     def __init__(self):
+        self.schema = None
         super(SqliteConnection, self).__init__()
 
     def execute_command(self, query):

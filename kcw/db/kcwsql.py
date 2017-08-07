@@ -23,7 +23,7 @@ class SqlConnection(object):
     """
 
     def __init__(self):
-        pass
+        self.sql_connection = None
 
     @abc.abstractmethod
     def execute_command(self, query):
@@ -144,6 +144,5 @@ class SqlConnection(object):
         """
         pass
 
-    sql_connection = None
     connection = property(get_sqlcon, set_sqlcon)
 
