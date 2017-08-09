@@ -87,6 +87,14 @@ config_set("quality", HIGH_QUALITY)
 swp_args = ["swp", "--fullscreen", "-C"]
 
 
+def get_version():
+    """
+    Get version of the module.
+    :return: non-empty string.
+    """
+    return VERSION
+
+
 def create_cache_directory(directory):
     """
     Create cache directory.
