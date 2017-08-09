@@ -7,7 +7,7 @@ _kcwallpaper()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-	opts="--version --verbose --debug --tag= --sleep= --mysql --config= --cachedir= --fifo= --clear-cache --clear-cache-img --ssl --random --quality= --advanced_konachan_flag= --cacheonly"
+	opts="--version --verbose --debug --tag= --sleep= --sql --config= --cachedir= --fifo= --clear-cache --clear-cache-img --ssl --random --quality= --advanced_konachan_flag= --cacheonly"
 
 	case "${prev}" in
 		"--fifo="  | "--config=" | "--cachedir=")
