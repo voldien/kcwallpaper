@@ -119,7 +119,7 @@ def main():
         verbose_printf("Starting loading image with index {}.\n", i)
 
         # Don't query in 'cacheonly' mode.
-        if not kcw.config_get("cacheonly"):
+        if not kcw.config_get("cacheonly") and kcw.config_get("hasInternet"):
 
             # Fetch data from konachan program.
             kc_cmdf = get_kcw_cmd(i)
@@ -129,7 +129,9 @@ def main():
             try:
                 output = p.readline()
             except IOError as err:
-                errorf(err.message)
+                kcw_errorf(err.message)
+                kcw.config_set("hasInternet", False)
+                continue
 
             # Extract values from the query tool.
             if len(output) > 0:
@@ -199,6 +201,7 @@ def main():
 
                 except urllib2.URLError as err:
                     errorf(err.message)
+                    continue
 
                 # Cache image if caching is enabled and sql connection exists.
                 if kcw.config_get("cachedata") and sqlcon:
