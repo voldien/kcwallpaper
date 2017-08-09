@@ -129,7 +129,7 @@ def main():
             try:
                 output = p.readline()
             except IOError as err:
-                kcw_errorf(err.message)
+                errorf(err.message)
                 kcw.config_set("hasInternet", False)
                 continue
 
@@ -240,11 +240,11 @@ def main():
 
             # Wait in till internet has returned
             else:
-                kcw.kcw_errorf("No connection to server and cached disabled.\n")
-                kcw.kcw_errorf("Program will wait in till connection comes up again.\n")
+                kcw.errorf("No connection to server and cached disabled.\n")
+                kcw.errorf("Program will wait in till connection comes up again.\n")
                 while kcw_connection_wait():
                     time.sleep(2.0)
-                kcw.kcw_config_set("hasInternet", True)
+                kcw.config_set("hasInternet", True)
 
         # Write image data to FIFO.
         kcw.write_fifo(kcw.config_get("wallpaper_fifo"), imgdata)
