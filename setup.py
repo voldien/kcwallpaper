@@ -18,17 +18,13 @@ version = __import__('kcw').get_version()
 
 EXCLUDE_FROM_PACKAGES = ['']
 
-with open('README.md') as f:
-    readme = f.read()
-    f.close()
-
 setup(
     name="kcwallpaper",
     version=version,
     url="https://github.com/voldien/kcwallpaper",
     author="Valdemar Lindberg",
     author_email="voldiekami@gmail.com",
-    description=readme,
+    description=open('README.md').read(),
     license="GPL",
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     entry_points={'console_scripts': [
