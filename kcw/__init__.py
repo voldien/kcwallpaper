@@ -14,6 +14,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import os
+import socket
 import subprocess
 
 import kcw.kcwreadoptions
@@ -39,6 +40,9 @@ DEFAULT_MYSQL_USERNAME = "kcwadmin"
 DEFAULT_MYSQL_PASSWORD = "randompass"
 DEFAULT_MYSQL_DATABASE = "konachan"
 kcwdb = "mysql"
+
+# FQDN for checking internet connection.
+REMOTE_SERVER = "google.com"
 
 # Options mapping.
 KONACHAN_SECURITY_FLAG = {False: "-n", True: "-s"}
@@ -138,3 +142,21 @@ def write_fifo(wallpaper_fifo, pbuf):
 
     return nbytes
 
+
+def kcw_connection_wait():
+    """
+    Wait in till the connection can access internet.
+    :return:
+    """
+
+    try:
+        # Fetch address.
+        host = socket.gethostbyname(REMOTE_SERVER)
+
+        # Try connect.
+        s = socket.create_connection((host, 80), 2)
+        s.close()
+        return True
+    except:
+        pass
+    return False
