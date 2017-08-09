@@ -9,8 +9,8 @@ if "install" in sys.argv[1]:
     lib_paths = [get_python_lib()]
     if lib_paths[0].startswith("/usr/lib"):
         lib_paths.append(get_python_lib(prefix="/usr/local/"))
-    for paths in lib_paths:
-        existing_path = os.path.abspath(os.path.join(lib_paths, "kcw"))
+    for path in lib_paths:
+        existing_path = os.path.abspath(os.path.join(path, "kcw"))
         if os.path.exists(existing_path):
             break
 
@@ -32,7 +32,7 @@ setup(
     license="GPL",
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     entry_points={'console_scripts': [
-              'my_project = kcw.__main__:main'
+              'kcwallpaper = kcw.__main__:main'
           ]},
     install_requires=['mysql-connector-python',
                       'pysqlite',
