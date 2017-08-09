@@ -83,6 +83,16 @@ def verbose_printf(fmt, *kwargs):
     return logf(KCW_VERBOSE, fmt, *kwargs)
 
 
+def warning_printf(fmt, *kwargs):
+    """
+
+    :param fmt:
+    :param kwargs:
+    :return:
+    """
+    print(fmt.format(*kwargs))
+
+
 def debug_printf(fmt, *kwargs):
     """
     Debug logging.
