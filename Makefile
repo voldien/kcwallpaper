@@ -28,11 +28,6 @@ TARGET := kcwallpaper
 install :
 	@echo -n "Create MySQL cache server.\n"
 	./sqlinstall.sh
-	$(MKDIR) $(INSTALL_LOCATION)/bin
-	$(CP) *.py $(INSTALL_LOCATION)/lib/$(PYTHONV)
-	$(CP) -r kcw $(INSTALL_LOCATION)/lib/$(PYTHONV)
-	$(CHMOD) +x $(INSTALL_LOCATION)/lib/$(PYTHONV)/$(PYTHONBIN)
-	$(LN) -fs $(INSTALL_LOCATION)/lib/$(PYTHONV)/$(PYTHONBIN)  $(INSTALL_LOCATION)/bin/$(TARGET)
 	$(MKDIR)  $(INSTALL_ETC_LOCATION)
 	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
 	$(CP) kcwallpaper.bc $(INSTALL_ETC_LOCATION)/bash_completion.d
