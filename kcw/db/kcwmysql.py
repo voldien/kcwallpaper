@@ -68,47 +68,69 @@ class MySqlCacheConnection (SqlCacheConnection):
 
         res = self.execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
 
-        return res is not None
+        return next(iter(res or []), None) is not None
 
     def check_img_exists(self, table, imgid):
 
         res = self.execute_command(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS)
 
-        return res is not None
+        return next(iter(res or []), None) is not None
 
     def num_entries_by_table(self, table):
 
         res = self.execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
 
-        if res:
-            return res[0]
-        else:
-            return 0
+        return next(iter(res or []), None)
 
     def add_img_entry(self, table, url, preview, score, imgid, tags):
 
         res = self.execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
             table, url, preview, score, imgid, tags, time.time()))
 
-        return res is not None
+        return next(iter(res or []), None) is not None
 
     def get_cached_img_url_by_id(self, table, imgid):
 
-        #
         res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_IMGID.format(table, imgid))
 
-        # Check result.
-        if res:
-            return str(res[0])
-        else:
-            return None
+        return next(iter(res or []), None)
 
     def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
 
-        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
+        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, self.get_tag_sql_condition(tag), offset))
 
-        # Check result.
-        if res:
-            return str(res[0])
-        else:
-            return None
+        return next(iter(res or []), None)
+
+    def init_query_commands(self):
+        """
+
+        :return:
+        :rtype
+        """
+        querylist = []
+        querylist.insert(SQL_FORMAT_QUERY_TRUNCATE, "TRUNCATE TABLE konachan.{} ;")
+        querylist.insert(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS, "SELECT COUNT(*) FROM {} WHERE sourceid='{}';")
+        querylist.insert(SQL_FORMAT_QUERY_TABLE_EXIST, "")
+        querylist.insert(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS, "SELECT COUNT(*) FROM {} WHERE sourceid='{}';")
+
+        querylist.insert(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE, "SELECT COUNT(*) FROM {} ;")
+        querylist.insert(SQL_FORMAT_QUERY_ADD_IMG_ENTRY, "INSERT INTO {} (url, preview, score, sourceid, tags, date) VALUES' \
+                                                   ' (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\');")
+        querylist.insert(SQL_FORMAT_GET_CACHED_IMAGE_URL, "SELECT url FROM %s LIMIT %d 1 ;")
+        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_IMGID, "SELECT url FROM {} WHERE sourceid='{}';")
+        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG, "SELECT {} FROM {} WHERE {} LIMIT 1 OFFSET {} ;")
+        querylist.insert(SQL_FORMAT_CREATE_TABLE, "CREATE TABLE IF NOT EXISTS `img` (" \
+                                           "	`sourceid` INT NOT NULL," \
+                                           "	`url` BLOB NOT NULL," \
+                                           "	`preview` BLOB NOT NULL," \
+                                           "	`score` INT NOT NULL," \
+                                           "	`tags` BLOB NOT NULL," \
+                                           "	`date` DATE NOT  NULL," \
+                                           "	`quality` INT" \
+                                           ");")
+        querylist.insert(SQL_FORMAT_CREATE_DATABASE, "CREATE SCHEMA IF NOT EXISTS `konachan`; USE konachan;")
+        querylist.insert(SQL_FORMAT_CREATE_USER, "CREATE USER 'kcwadmin'@'%';" \
+                                          "SET PASSWORD for 'kcwadmin'@'localhost' = PASSWORD(\"randompass\");" \
+                                          "GRANT SELECT,INSERT,ALTER,DELETE on konachan.img to 'kcwadmin'@'localhost'")
+
+        return querylist
