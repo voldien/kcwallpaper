@@ -151,6 +151,22 @@ class SqlCacheConnection(object):
         """
         pass
 
+    def get_tag_sql_condition(self, tag):
+        """
+        Create 'where' condition sequence
+        for each of the individual tags.
+        :param tag: string with tag separated by whitespace.
+        :return: condition string sequence.
+        """
+        logic = []
+        tags = str(tag).split(" ")
+        for i in range(0, len(tags) - 1):
+            logic.append(' tags LIKE \'%{}%\' AND'.format(tags[i]))
+        else:
+            logic.append(' tags LIKE \'%{}%\' '.format(tags[i + 1]))
+
+        return "".join(logic)
+
     @abc.abstractmethod
     def init_query_commands(self):
         """
