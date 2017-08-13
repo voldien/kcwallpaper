@@ -24,6 +24,7 @@ class SqlCacheConnection(object):
 
     def __init__(self):
         self._sql_connection = None
+        self._sql_query = self.init_query_commands()
 
     @abc.abstractmethod
     def execute_command(self, query):
@@ -146,8 +147,27 @@ class SqlCacheConnection(object):
         :param tag: tags associated with image.
         :param offset: nth result.
         :return: non-empty string.
+        :rtype: str
         """
         pass
 
+    @abc.abstractmethod
+    def init_query_commands(self):
+        """
+        Create query command directory.
+        :return: non-empty list.
+        :rtype: list
+        """
+        pass
+
+    def get_querylist(self):
+        """
+        Get query format list.
+        :return: non-empty list.
+        :rtype: list
+        """
+        return self._sql_query
+
+    queryf = property(get_querylist, None)
     connection = property(get_sqlcon, set_sqlcon)
 
