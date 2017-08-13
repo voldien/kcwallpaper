@@ -48,7 +48,6 @@ class MySqlCacheConnection (SqlCacheConnection):
     def connect(self, user, password, host, port, database):
         try:
             self.connection = mysql.connector.connect(user=user, password=password, host=host, database=database)
-            return self.con
         except mysql.connector.Error as err:
             print("Couldn't connect to a mysql server %s:%d %s." % (host, port, err.msg))
             print("Caching can not be used without MySQL.")
@@ -58,8 +57,8 @@ class MySqlCacheConnection (SqlCacheConnection):
         raise Exception("Failed to connect.\n")
 
     def disconnect(self):
-        if self.con:
-            self.con.close()
+        if self.connection:
+            self.connection.close()
 
     def clear_cache(self, table):
 
