@@ -97,7 +97,8 @@ class MySqlCacheConnection (SqlCacheConnection):
 
     def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
 
-        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, self.get_tag_sql_condition(tag), offset))
+        res = self.execute_command(
+            SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, self.get_tag_sql_condition(tag), offset))
 
         return next(iter(res or []), None)
 

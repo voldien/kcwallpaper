@@ -17,6 +17,7 @@ import os
 import socket
 import subprocess
 
+import db
 import kcw.kcwreadoptions
 from kcwconfiguration import *
 from kcwlog import *
@@ -39,7 +40,6 @@ DEFAULT_MYSQL_HOSTNAME = "localhost"
 DEFAULT_MYSQL_USERNAME = "kcwadmin"
 DEFAULT_MYSQL_PASSWORD = "randompass"
 DEFAULT_MYSQL_DATABASE = "konachan"
-kcwdb = "mysql"
 
 # FQDN for checking internet connection.
 REMOTE_SERVER = "google.com"
@@ -144,7 +144,7 @@ def write_fifo(wallpaper_fifo, pbuf):
     except AttributeError as err:
         errorf("Attribute error '%s, %s'.\n", (wallpaper_fifo, err.message))
         exit(1)
-    except Exception as err:
+    except:
         errorf("Unexpected error:", sys.exc_info()[0])
         exit(1)
 

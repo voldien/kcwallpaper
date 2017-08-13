@@ -36,7 +36,7 @@ def read_first_pass():
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
     except getopt.GetoptError as err:
-        print(err.message)
+        kcw.errorf(err.message)
         exit()
 
     for o, a in opts:
