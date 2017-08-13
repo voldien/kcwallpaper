@@ -15,34 +15,14 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # SQL constant format query format.
-SQL_FORMAT_QUERY_TRUNCATE = "TRUNCATE TABLE konachan.{} ;"
-SQL_FORMAT_QUERY_CHECK_IMG_EXISTS = "SELECT COUNT(*) FROM {} WHERE sourceid='{}';"
-SQL_FORMAT_QUERY_TABLE_EXIST = ""
-SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE = "SELECT COUNT(*) FROM {} ;"
-SQL_FORMAT_QUERY_ADD_IMG_ENTRY = "INSERT INTO {} (url, preview, score, sourceid, tags, date) VALUES ('{}','{}','{}','{}','{}','{}');"
-SQL_FORMAT_GET_CACHED_IMAGE_URL = "SELECT url FROM %s LIMIT %d 1 ;"
-SQL_FORMAT_QUERY_IMG_BY_IMGID = "SELECT url FROM {} WHERE sourceid='{}';"
-SQL_FORMAT_QUERY_IMG_BY_TAG = "SELECT {} FROM {} WHERE tags LIKE '%{}%' LIMIT 1 OFFSET {} ;"
-
-# SQL query for creating database.
-SQL_CREATE_DATABASE = "CREATE SCHEMA IF NOT EXISTS `konachan`;"
-"USE konachan;"
-
-# Table for caching image data.
-SQL_CREATE_TABLE = "CREATE TABLE IF NOT EXISTS `img` (" \
-    "	`sourceid` INT NOT NULL,"                       \
-    "	`url` BLOB NOT NULL,"                           \
-    "	`preview` BLOB NOT NULL,"                       \
-    "	`score` INT NOT NULL,"                          \
-    "	`tags` BLOB NOT NULL,"                          \
-    "	`date` DATE NOT  NULL,"                         \
-    "	`quality` INT"                                  \
-    ");"                                                \
-
-
-# SQL query command for creating user for access rights.
-SQL_CREATE_USER = "CREATE USER 'kcwadmin'@'%';"                                         \
-    "SET PASSWORD for 'kcwadmin'@'localhost' = PASSWORD(\"randompass\");"               \
-    "GRANT SELECT,INSERT,ALTER,DELETE on konachan.img to 'kcwadmin'@'localhost'"        \
-
-
+SQL_FORMAT_QUERY_TRUNCATE = 0
+SQL_FORMAT_QUERY_CHECK_IMG_EXISTS = 1
+SQL_FORMAT_QUERY_TABLE_EXIST = 2
+SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE = 3
+SQL_FORMAT_QUERY_ADD_IMG_ENTRY = 4
+SQL_FORMAT_GET_CACHED_IMAGE_URL = 5
+SQL_FORMAT_QUERY_IMG_BY_IMGID = 6
+SQL_FORMAT_QUERY_IMG_BY_TAG = 7
+SQL_FORMAT_CREATE_TABLE = 8
+SQL_FORMAT_CREATE_DATABASE = 9
+SQL_FORMAT_CREATE_USER = 10
