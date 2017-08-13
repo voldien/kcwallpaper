@@ -25,9 +25,9 @@ def create_sql(db):
     """
     try:
         if db == "mysql":
-            return kcwmysql.MySqlConnection()
+            return kcwmysql.MySqlCacheConnection()
         elif db == "sqlite":
-            return kcwsqlite.SqliteConnection()
+            return kcwsqlite.SqliteCacheConnection()
         else:
             raise ValueError("Invalid database")
     except Exception as err:

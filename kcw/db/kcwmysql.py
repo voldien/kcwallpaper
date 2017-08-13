@@ -21,7 +21,7 @@ from dbdef import *
 import time
 
 
-class MySqlConnection (SqlConnection):
+class MySqlCacheConnection (SqlCacheConnection):
     """
     MySQLConnection is a SqlConnection
     that uses MySQL for storing cache data.
@@ -29,7 +29,7 @@ class MySqlConnection (SqlConnection):
 
     #
     def __init__(self):
-        super(MySqlConnection, self).__init__()
+        super(MySqlCacheConnection, self).__init__()
         pass
 
     def execute_command(self, query):

@@ -16,7 +16,7 @@
 import abc
 
 
-class SqlConnection(object):
+class SqlCacheConnection(object):
     """
     Abstract base class for SQL
     connection

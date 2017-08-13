@@ -22,7 +22,7 @@ import kcw.kcwconfiguration
 from kcw.db.kcwsql import SqlConnection
 
 
-class SqliteConnection (SqlConnection):
+class SqliteCacheConnection (SqlCacheConnection):
     """
     SQLite is a lightweight sql server that
     does not require any server running.
@@ -30,7 +30,7 @@ class SqliteConnection (SqlConnection):
 
     def __init__(self):
         self.schema = None
-        super(SqliteConnection, self).__init__()
+        super(SqliteCacheConnection, self).__init__()
 
     def execute_command(self, query):
         try:
