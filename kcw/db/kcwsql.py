@@ -16,14 +16,15 @@
 import abc
 
 
-class SqlConnection(object):
+class SqlCacheConnection(object):
     """
     Abstract base class for SQL
     connection
     """
 
     def __init__(self):
-        self.sql_connection = None
+        self._sql_connection = None
+        self._sql_query = self.init_query_commands()
 
     @abc.abstractmethod
     def execute_command(self, query):
@@ -31,6 +32,7 @@ class SqlConnection(object):
         Execute internal query command.
         :param query: query string.
         :return:
+        :rtype: tuple
         """
         pass
 
@@ -51,7 +53,6 @@ class SqlConnection(object):
     def disconnect(self):
         """
         Disconnect from server.
-        :return:
         """
         pass
 
@@ -59,8 +60,9 @@ class SqlConnection(object):
         """
 
         :return:
+        :rtype: object
         """
-        return self.sql_connection
+        return self._sql_connection
 
     def set_sqlcon(self, connection):
         """
@@ -68,7 +70,7 @@ class SqlConnection(object):
         :param connection:
         :return:
         """
-        self.sql_connection = connection
+        self._sql_connection = connection
 
     @abc.abstractmethod
     def clear_cache(self, table):
@@ -85,6 +87,7 @@ class SqlConnection(object):
         Check if table exists in sql schema.
         :param table: name of table
         :return: none false if exists.
+        :rtype: bool
         """
         pass
 
@@ -95,6 +98,7 @@ class SqlConnection(object):
         :param table: table to lookup at.
         :param imgid: image unique ID.
         :return: none false if image exists.
+        :rtype: bool
         """
         pass
 
@@ -104,6 +108,7 @@ class SqlConnection(object):
         Query number of entries in table.
         :param table: table in sql database.
         :return: number of entries.
+        :rtype: int
         """
         pass
 
@@ -128,6 +133,7 @@ class SqlConnection(object):
         :param table:
         :param imgid:
         :return: non-empty string.
+        :rtype: str
         """
         pass
 
@@ -141,8 +147,43 @@ class SqlConnection(object):
         :param tag: tags associated with image.
         :param offset: nth result.
         :return: non-empty string.
+        :rtype: str
         """
         pass
 
+    def get_tag_sql_condition(self, tag):
+        """
+        Create 'where' condition sequence
+        for each of the individual tags.
+        :param tag: string with tag separated by whitespace.
+        :return: condition string sequence.
+        """
+        logic = []
+        tags = str(tag).split(" ")
+        for i in range(0, len(tags) - 1):
+            logic.append(' tags LIKE \'%{}%\' AND'.format(tags[i]))
+        else:
+            logic.append(' tags LIKE \'%{}%\' '.format(tags[i + 1]))
+
+        return "".join(logic)
+
+    @abc.abstractmethod
+    def init_query_commands(self):
+        """
+        Create query command directory.
+        :return: non-empty list.
+        :rtype: list
+        """
+        pass
+
+    def get_querylist(self):
+        """
+        Get query format list.
+        :return: non-empty list.
+        :rtype: list
+        """
+        return self._sql_query
+
+    queryf = property(get_querylist, None)
     connection = property(get_sqlcon, set_sqlcon)
 

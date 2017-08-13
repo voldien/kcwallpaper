@@ -31,6 +31,8 @@ install :
 	$(MKDIR)  $(INSTALL_ETC_LOCATION)
 	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
 	$(CP) kcwallpaper.bc $(INSTALL_ETC_LOCATION)/bash_completion.d
+	$(MAKE) -C swp install
+	$(MAKE) -C konachan install
 
 distribution :
 	@echo -n "Creating archive.\n"

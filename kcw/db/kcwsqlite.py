@@ -18,11 +18,12 @@ import time
 import os.path
 
 from dbdef import *
-import kcw.kcwconfiguration
-from kcw.db.kcwsql import SqlConnection
+import kcw
+from kcw.kcwconfiguration import config_get
+from kcw.db.kcwsql import SqlCacheConnection
 
 
-class SqliteConnection (SqlConnection):
+class SqliteCacheConnection (SqlCacheConnection):
     """
     SQLite is a lightweight sql server that
     does not require any server running.
@@ -30,7 +31,7 @@ class SqliteConnection (SqlConnection):
 
     def __init__(self):
         self.schema = None
-        super(SqliteConnection, self).__init__()
+        super(SqliteCacheConnection, self).__init__()
 
     def execute_command(self, query):
         try:
@@ -56,90 +57,102 @@ class SqliteConnection (SqlConnection):
         :return:
         """
         try:
-            path = "%s/kcwsqllite.db" % os.path.expanduser("~/.kcw")
-            #kcw.kcwconfiguration.kcw_config_get("cachedirectory")
-            #
+            path = "{}/../kcwsqllite.db".format(config_get("cachedirectory"))
 
             if os.path.exists(path):
                 kcw.verbose_printf("Loading database at %s" % path)
             else:
                 kcw.verbose_printf("Created database at %s" % path)
-            self.connection = sqlite3.connect(database=path)
 
+            self.connection = sqlite3.connect(database=path)
             self.schema = database
 
             self.create_tables()
 
-            return self.connection
         except Exception as err:
-            print(err.message)
-            return None
+            kcw.errorf(err.message)
 
     def disconnect(self):
         self.connection.close()
 
     def create_tables(self):
-        self.execute_command(SQL_CREATE_TABLE)
+        self.execute_command(self.queryf[SQL_FORMAT_CREATE_TABLE])
 
     def clear_cache(self, table):
-        self.execute_command(SQL_FORMAT_QUERY_TRUNCATE.format(table))
+        self.execute_command(self.queryf[SQL_FORMAT_QUERY_TRUNCATE].format(table))
 
     def check_table_exists(self, table):
 
-        res = self.execute_command(SQL_FORMAT_QUERY_TABLE_EXIST.format(table))
+        res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_TABLE_EXIST].format(table))
 
-        return res is not None
+        return next(iter(res or []), None) is not None
 
     def check_img_exists(self, table, imgid):
 
         #
-        res = self.execute_command(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS.format(table, imgid))
-        if not res:
-            return False
+        res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_CHECK_IMG_EXISTS].format(table, imgid))
 
-        return not(res[0] == 0)
+        return next(iter(res or []), None) is not None
 
     def num_entries_by_table(self, table):
 
-        res = self.execute_command(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE.format(table))
+        res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE].format(table))
 
-        if res:
-            return res[0]
-        else:
-            return 0
+        return next(iter(res or []), None)
 
     def add_img_entry(self, table, url, preview, score, imgid, tags):
 
-        res = self.execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
+        res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_ADD_IMG_ENTRY].format(
             table, url, preview, score, imgid, tags, time.time()))
 
-        return res is not None
+        return next(iter(res or []), None) is not None
 
     def get_cached_img_url(self, table):
 
-        query = "SELECT url FROM %s LIMIT %d 1 OFFSET 0;".format(table, 1)
-        #
-        res = self.execute_command(query)
+        res = self.execute_command(self.queryf[SQL_FORMAT_GET_CACHED_IMAGE_URL].format(table, 1))
 
-        return res
+        return next(iter(res or []), None)
 
     def get_cached_img_url_by_id(self, table, imgid):
 
         #
-        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_IMGID.format(table, imgid))
+        res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_IMG_BY_IMGID].format(table, imgid))
 
-        # Check result.
-        if res:
-            return str(res[0])
-        else:
-            return None
+        return next(iter(res or []), None)
 
     def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
 
-        res = self.execute_command(SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, tag, offset))
+        res = self.execute_command(
+            self.queryf[SQL_FORMAT_QUERY_IMG_BY_TAG].format(col, table, self.get_tag_sql_condition(tag), offset))
 
-        # Check result.
-        if res:
-            return str(res[0])
-        else:
-            return None
+        return next(iter(res or []), None)
+
+    def init_query_commands(self):
+        """
+
+        :return:
+        """
+        querylist = []
+        querylist.insert(SQL_FORMAT_QUERY_TRUNCATE, "DELETE FROM {} ;")
+        querylist.insert(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS, "SELECT COUNT(*) FROM {} WHERE sourceid='{}';")
+        querylist.insert(SQL_FORMAT_QUERY_TABLE_EXIST, "")
+        querylist.insert(SQL_FORMAT_QUERY_CHECK_IMG_EXISTS, "SELECT COUNT(*) FROM {} WHERE sourceid='{}';")
+
+        querylist.insert(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE, "SELECT COUNT(*) FROM {} ;")
+        querylist.insert(SQL_FORMAT_QUERY_ADD_IMG_ENTRY,
+                         "INSERT INTO {} (url, preview, score, sourceid, tags, date) VALUES" \
+                         "(\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\');")
+        querylist.insert(SQL_FORMAT_GET_CACHED_IMAGE_URL, "SELECT url FROM %s OFFSET %d LIMIT 1 ;")
+        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_IMGID, "SELECT url FROM {} WHERE sourceid='{}';")
+        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG, "SELECT {} FROM {} WHERE {} LIMIT 1 OFFSET {} ;")
+        querylist.insert(SQL_FORMAT_CREATE_TABLE, "CREATE TABLE IF NOT EXISTS `img` (" \
+                                           "	`sourceid` INT NOT NULL," \
+                                           "	`url` BLOB NOT NULL," \
+                                           "	`preview` BLOB NOT NULL," \
+                                           "	`score` INT NOT NULL," \
+                                           "	`tags` BLOB NOT NULL," \
+                                           "	`date` DATE NOT  NULL," \
+                                           "	`quality` INT" \
+                                           ");")
+
+        return querylist

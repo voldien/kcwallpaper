@@ -74,7 +74,7 @@ def main():
     if kcw.config_get("use_sql"):
 
         try:
-            sqlcon = kcw.db.create_sql(kcw.config_get("sql"))
+            sqlcon = kcw.db.create_sql_cache_connection(kcw.config_get("sql"))
             sqlcon.connect(
                 kcw.config_get("sql_username"),
                 kcw.config_get("sql_password"),
@@ -177,7 +177,6 @@ def main():
             try:
                 with open(fpath, 'rb') as fcach:
                     imgdata = fcach.read()
-                fcach.close()
             except IOError as err:
                 errorf(err.message)
             except Exception as err:
@@ -210,9 +209,8 @@ def main():
 
                     # Save cached image to file.
                     try:
-                        cachef = open(fpath, 'wb')
-                        cachef.write(imgdata)
-                        cachef.close()
+                        with open(fpath, 'wb') as f:
+                            f.write(imgdata)
                     except IOError as ioex:
                         errorf("Failed to cache downloaded image to {}.\n\t{}.\n", fpath, ioex.message)
                     #
@@ -234,7 +232,6 @@ def main():
                 try:
                     with open(fpath, 'rb') as fcach:
                         imgdata = fcach.read()
-                    fcach.close()
                 except IOError as err:
                     pass
 
