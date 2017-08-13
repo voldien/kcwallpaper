@@ -194,7 +194,7 @@ def read_options(config_path):
             kcw.config_set("cacheonly", True)
         elif o == "--clear-cache":
             kcw.verbose_printf("Clearing cache database.\n")
-            cachecon = kcw.db.create_sql(kcw.config_get("sql"))
+            cachecon = kcw.db.create_sql_cache_connection(kcw.config_get("sql"))
             cachecon.connect(
                 kcw.config_get("sql_username"),
                 kcw.config_get("sql_password"),
