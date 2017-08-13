@@ -31,6 +31,7 @@ class SqlConnection(object):
         Execute internal query command.
         :param query: query string.
         :return:
+        :rtype: tuple
         """
         pass
 
@@ -51,7 +52,6 @@ class SqlConnection(object):
     def disconnect(self):
         """
         Disconnect from server.
-        :return:
         """
         pass
 
@@ -85,6 +85,7 @@ class SqlConnection(object):
         Check if table exists in sql schema.
         :param table: name of table
         :return: none false if exists.
+        :rtype: bool
         """
         pass
 
@@ -95,6 +96,7 @@ class SqlConnection(object):
         :param table: table to lookup at.
         :param imgid: image unique ID.
         :return: none false if image exists.
+        :rtype: bool
         """
         pass
 
@@ -104,6 +106,7 @@ class SqlConnection(object):
         Query number of entries in table.
         :param table: table in sql database.
         :return: number of entries.
+        :rtype: int
         """
         pass
 
@@ -128,6 +131,7 @@ class SqlConnection(object):
         :param table:
         :param imgid:
         :return: non-empty string.
+        :rtype: str
         """
         pass
 
