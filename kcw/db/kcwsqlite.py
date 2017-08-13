@@ -18,8 +18,9 @@ import time
 import os.path
 
 from dbdef import *
-import kcw.kcwconfiguration
-from kcw.db.kcwsql import SqlConnection
+import kcw
+from kcw.kcwconfiguration import config_get
+from kcw.db.kcwsql import SqlCacheConnection
 
 
 class SqliteCacheConnection (SqlCacheConnection):
