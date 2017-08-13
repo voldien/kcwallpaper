@@ -57,9 +57,7 @@ class SqliteCacheConnection (SqlCacheConnection):
         :return:
         """
         try:
-            path = "%s/kcwsqllite.db" % os.path.expanduser("~/.kcw")
-            #kcw.kcwconfiguration.kcw_config_get("cachedirectory")
-            #
+            path = "{}/../kcwsqllite.db".format(config_get("cachedirectory"))
 
             if os.path.exists(path):
                 kcw.verbose_printf("Loading database at %s" % path)
