@@ -160,11 +160,10 @@ class SqlCacheConnection(object):
         """
         logic = []
         tags = str(tag).split(" ")
-        for i in range(0, len(tags) - 1):
-            logic.append(' tags LIKE \'%{}%\' AND'.format(tags[i]))
+        for i in tags:
+            logic.append(' tags LIKE \'%{}%\' AND'.format(i))
         else:
-            logic.append(' tags LIKE \'%{}%\' '.format(tags[i + 1]))
-
+            logic[-1] = logic[-1].replace("AND", "")
         return "".join(logic)
 
     @abc.abstractmethod
