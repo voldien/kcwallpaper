@@ -74,7 +74,7 @@ def main():
     if kcw.config_get("use_sql"):
 
         try:
-            sqlcon = kcw.db.create_sql(kcw.config_get("sql"))
+            sqlcon = kcw.db.create_sql_cache_connection(kcw.config_get("sql"))
             sqlcon.connect(
                 kcw.config_get("sql_username"),
                 kcw.config_get("sql_password"),
