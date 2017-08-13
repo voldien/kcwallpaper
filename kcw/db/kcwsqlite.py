@@ -63,16 +63,14 @@ class SqliteCacheConnection (SqlCacheConnection):
                 kcw.verbose_printf("Loading database at %s" % path)
             else:
                 kcw.verbose_printf("Created database at %s" % path)
-            self.connection = sqlite3.connect(database=path)
 
+            self.connection = sqlite3.connect(database=path)
             self.schema = database
 
             self.create_tables()
 
-            return self.connection
         except Exception as err:
-            print(err.message)
-            return None
+            kcw.errorf(err.message)
 
     def disconnect(self):
         self.connection.close()
