@@ -24,7 +24,9 @@ from kcw import *
 
 
 def main():
-    """ Main function.  """
+    """
+    Main function.
+    """
 
     # Read options.
     kcw.kcwreadoptions.read_options(DEFAULT_CONFIG_PATH)
@@ -84,7 +86,7 @@ def main():
 
         except Exception as err:
             # Disable caching if connection fails.
-            kcw.errorf("Caching failed, {}.\n", err.message)
+            kcw.errorf("Failed creating caching connection.\n\t {}.\n", err.message)
             kcw.config_set("cachedata", False)
             kcw.config_set("usecache", False)
             kcw.config_set("cacheonly", False)
