@@ -85,14 +85,14 @@ class SqliteCacheConnection (SqlCacheConnection):
 
         res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_TABLE_EXIST].format(table))
 
-        return next(iter(res or []), None) is not None
+        return next(iter(res or []), None)
 
     def check_img_exists(self, table, imgid):
 
         #
         res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_CHECK_IMG_EXISTS].format(table, imgid))
 
-        return next(iter(res or []), None) is not None
+        return next(iter(res or []), None)
 
     def num_entries_by_table(self, table):
 
@@ -105,7 +105,7 @@ class SqliteCacheConnection (SqlCacheConnection):
         res = self.execute_command(self.queryf[SQL_FORMAT_QUERY_ADD_IMG_ENTRY].format(
             table, url, preview, score, imgid, tags, time.time()))
 
-        return next(iter(res or []), None) is not None
+        return next(iter(res or []), None)
 
     def get_cached_img_url(self, table):
 
