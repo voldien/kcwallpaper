@@ -24,6 +24,7 @@ def sp_trim_left_right_trim(line):
     Trim string from left and right only.
     :param line:
     :return:
+    :rtype: str
     """
     return line.replace(" ", "")
 
@@ -33,6 +34,7 @@ def sp_parse_file(path):
     Parse simple configuration file.
     :param path: file path.
     :return: directory table and error array.
+    :rtype: dict, list
     """
 
     # Check if parameter is valid.
@@ -41,10 +43,8 @@ def sp_parse_file(path):
 
     # Load file and extract configuration syntax.
     try:
-        f = open(path, 'r')
-        table, err = sp_extract_grammar(f)
-        f.close()
-        return table, err
+        with open(path, 'r') as f:
+            return sp_extract_grammar(f)
     except IOError as err:
         print("Couldn't load config file, %s.\n" % err.message)
     except Exception as err:
@@ -57,6 +57,7 @@ def sp_remove_comment(line):
     Remove comment from line.
     :param line: line statement.
     :return: string without comment.
+    :rtype: str
     """
     com = line.find(SP_COMMENTS_SYNTAX)
     if com == -1:
@@ -70,6 +71,7 @@ def sp_extract_grammar(f):
     Extract grammar rule.
     :param f: readable file.
     :return: dictionary of each attribute and value.
+    :rtype: dict, list
     """
     table = {}
     err = []
