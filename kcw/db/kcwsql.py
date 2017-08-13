@@ -23,7 +23,7 @@ class SqlConnection(object):
     """
 
     def __init__(self):
-        self.sql_connection = None
+        self._sql_connection = None
 
     @abc.abstractmethod
     def execute_command(self, query):
@@ -59,8 +59,9 @@ class SqlConnection(object):
         """
 
         :return:
+        :rtype: object
         """
-        return self.sql_connection
+        return self._sql_connection
 
     def set_sqlcon(self, connection):
         """
@@ -68,7 +69,7 @@ class SqlConnection(object):
         :param connection:
         :return:
         """
-        self.sql_connection = connection
+        self._sql_connection = connection
 
     @abc.abstractmethod
     def clear_cache(self, table):
