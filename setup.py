@@ -32,7 +32,7 @@ setup(
           ]},
     install_requires=['mysql-connector-python',
                       'pysqlite',
-                      'urllib2'],
+                      'urllib2', 'mysql'],
     zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
