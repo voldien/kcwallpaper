@@ -24,7 +24,7 @@ from kcwlog import *
 from kcwsimpleparser import *
 
 # Global constant variable.
-VERSION = "0.10a0"
+VERSION = "0.10b0"
 CONFIG_FIELPATH = "/etc/"
 CONFIG_FIELNAME = "kcw.conf"
 DEFAULT_CONFIG_PATH = CONFIG_FIELPATH + CONFIG_FIELNAME
