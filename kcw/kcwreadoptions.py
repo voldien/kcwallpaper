@@ -30,14 +30,13 @@ longoptions = ["version", "verbose", "debug", "quite", "tag=", "sleep=", "sql=",
 def read_first_pass():
     """
     Read first option pass.
-    :return:
     """
 
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
     except getopt.GetoptError as err:
         kcw.errorf(err.message)
-        exit()
+        exit(1)
 
     for o, a in opts:
         if o in ("-v", "--version"):
