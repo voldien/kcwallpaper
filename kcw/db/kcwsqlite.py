@@ -140,19 +140,19 @@ class SqliteCacheConnection (SqlCacheConnection):
 
         querylist.insert(SQL_FORMAT_QUERY_NUM_ENTRIES_IN_TABLE, "SELECT COUNT(*) FROM {} ;")
         querylist.insert(SQL_FORMAT_QUERY_ADD_IMG_ENTRY,
-                         "INSERT INTO {} (url, preview, score, sourceid, tags, date) VALUES" \
+                         "INSERT INTO {} (url, preview, score, sourceid, tags, date) VALUES"
                          "(\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\');")
         querylist.insert(SQL_FORMAT_GET_CACHED_IMAGE_URL, "SELECT url FROM %s OFFSET %d LIMIT 1 ;")
         querylist.insert(SQL_FORMAT_QUERY_IMG_BY_IMGID, "SELECT url FROM {} WHERE sourceid='{}';")
         querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG, "SELECT {} FROM {} WHERE {} LIMIT 1 OFFSET {} ;")
-        querylist.insert(SQL_FORMAT_CREATE_TABLE, "CREATE TABLE IF NOT EXISTS `img` (" \
-                                           "	`sourceid` INT NOT NULL," \
-                                           "	`url` BLOB NOT NULL," \
-                                           "	`preview` BLOB NOT NULL," \
-                                           "	`score` INT NOT NULL," \
-                                           "	`tags` BLOB NOT NULL," \
-                                           "	`date` DATE NOT  NULL," \
-                                           "	`quality` INT" \
-                                           ");")
+        querylist.insert(SQL_FORMAT_CREATE_TABLE, "CREATE TABLE IF NOT EXISTS `img` ("
+                                                  "	`sourceid` INT NOT NULL,"
+                                                  "	`url` BLOB NOT NULL,"
+                                                  "	`preview` BLOB NOT NULL,"
+                                                  "	`score` INT NOT NULL,"
+                                                  "	`tags` BLOB NOT NULL,"
+                                                  "	`date` DATE NOT  NULL,"
+                                                  "	`quality` INT"
+                                                  ");")
 
         return querylist
