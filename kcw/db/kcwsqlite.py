@@ -41,10 +41,12 @@ class SqliteCacheConnection (SqlCacheConnection):
             res = cur.fetchone()
             cur.close()
             return res
+        except sqlite3.DatabaseError as err:
+            kcw.errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
+            exit(1)
         except Exception as err:
             kcw.errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
-
-        return None
+        return ()
 
     def connect(self, user, password, host, port, database):
         """

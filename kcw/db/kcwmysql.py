@@ -41,10 +41,9 @@ class MySqlCacheConnection (SqlCacheConnection):
             return res
         except mysql.connector.Error as err:
             kcw.errorf("Failed to perform query '{}'\n\terror : {}.\n", query, err.message)
+            exit(1)
+        return ()
 
-        return None
-
-    # Connect to mysql server.
     def connect(self, user, password, host, port, database):
         try:
             self.connection = mysql.connector.connect(user=user, password=password, host=host, database=database)
