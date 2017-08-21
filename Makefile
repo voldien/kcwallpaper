@@ -19,19 +19,28 @@ INSTALL_LOCATION=$(DESTDIR)$(PREFIX)
 INSTALL_ETC_LOCATION=$(DESTDIR)/etc
 PYTHONV ?= python2.7
 PIP ?= pip2
+# Compiler
+CC ?= cc
 #
 PYTHON := kcwsql.py kcwsimpleparser.py
 PYTHONBIN := kcwallpaper.py
 #
 TARGET := kcwallpaper
+INSTALL_DEP :=
 
-install :
+install : $(INSTALL_DEP)
 	./sqlinstall.sh
 	$(MKDIR)  $(INSTALL_ETC_LOCATION)
 	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
 	$(CP) kcwallpaper.bc $(INSTALL_ETC_LOCATION)/bash_completion.d
-	$(MAKE) -C swp install
-	$(MAKE) -C konachan install
+	$(PYTHONV) setup.py build
+	$(PYTHONV) setup.py install
+
+install_swp_deps :
+	$(MAKE) -C swp install CC=$(CC)
+
+install_konachan_deps :
+	$(MAKE) -C konachan install CC=$(CC)
 
 distribution :
 	@echo -n "Creating archive.\n"
@@ -51,6 +60,14 @@ clean:
 	@echo -n "Removing useless files.\n"
 	$(RM) *.pyc
 
-.PHONY : install distribution clean dep
+.PHONY : install distribution clean dep install_swp_deps install_konachan_deps
+
+ifneq (,$(swp))
+    INSTALL_DEP += install_swp_deps
+endif
+
+ifneq (,$(konachan))
+    INSTALL_DEP += install_konachan_deps
+endif
 
 
