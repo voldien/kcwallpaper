@@ -30,9 +30,9 @@ setup(
     entry_points={'console_scripts': [
               'kcwallpaper = kcw.__main__:main'
           ]},
-    install_requires=['mysql-connector-python',
+    install_requires=['mysql', 'mysql-connector-python',
                       'pysqlite',
-                      'urllib2', 'mysql'],
+                      'urllib2'],
     zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
