@@ -25,14 +25,14 @@ setup(
     author="Valdemar Lindberg",
     author_email="voldiekami@gmail.com",
     description=open('README.md').read(),
-    license="GPL",
+    license="GNU General Public License v3 (GPLv3)",
     packages=find_packages(exclude=EXCLUDE_FROM_PACKAGES),
     entry_points={'console_scripts': [
               'kcwallpaper = kcw.__main__:main'
           ]},
-    install_requires=['mysql-connector-python',
+    install_requires=['mysql', 'mysql-connector-python',
                       'pysqlite',
-                      'urllib2', 'mysql'],
+                      'urllib2'],
     zip_safe=False,
     classifiers=[
         'Development Status :: 3 - Alpha',
