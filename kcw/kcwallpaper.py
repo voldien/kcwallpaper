@@ -17,7 +17,7 @@
 import atexit
 import signal
 import time
-import urllib2
+import urllib3
 
 import kcw.db
 from kcw import *
@@ -192,7 +192,7 @@ def main():
                     # basename for the image file.
                     basename = os.path.basename(url).decode().replace("%20", " ")
                     # Create connection.
-                    response = urllib2.urlopen(url)
+                    response = urllib3.urlopen(url)
                     # Download all data.
                     verbose_printf("Downloading image from URL : {}\n", fetchurl)
                     imgdata = response.read()
