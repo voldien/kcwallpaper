@@ -7,34 +7,68 @@ _kcwallpaper()
 	cur="${COMP_WORDS[COMP_CWORD]}"
 	prev="${COMP_WORDS[COMP_CWORD-1]}"
 
-	opts="--version --verbose --debug --tag= --sleep= --sql --config= --cachedir= --fifo= --clear-cache --clear-cache-img --ssl --random --quality= --advanced_konachan_flag= --cacheonly"
+	opts="
+	--version
+	--verbose
+	--debug
+	--tag=
+	--sleep=
+	--sql
+	--config=
+	--cachedir=
+	--fifo=
+	--clear-cache
+	--clear-cache-img
+	--ssl
+	--random
+	--quality=
+	--advanced_konachan_flag=
+	--cacheonly"
 
-	case "${prev}" in
-		"--fifo="  | "--config=" | "--cachedir=")
-			COMPREPLY=( $(compgen -f ${cur}) )
-			return 0	
-		;;
-		"--quality=")
-			local subopt="low medium high"
-			COMPREPLY=( $(compgen -W "${subopt}" -- ${cur}) )
+	if [[ "${cur}" == "--"*"="* ]] ; then
+
+		# Option with special information.
+		case "${cur}" in
+		"--fifo="*  | "--config="* | "--cachedir="*)
+			local equalindex=`expr index "$cur" =`
+			local path=${cur:$equalindex}
+			local opt=${cur:0:$equalindex}
+			COMPREPLY=( $opt$(compgen -f ${path}) )
 			return 0
 		;;
-		"--tag=")
-			if [ -n "$(which konachan)" ] && [ -n "${cur}" ] ; then
-				local subopt=\"$(konachan -s -t "${cur}*" -T -p 0 --limit=10 -f "name")\"
-				COMPREPLY=( $(compgen -W "${subopt}" -- ${cur}) )
+		"--quality="*)
+			local quality=${cur:10}
+			local subopt="low medium high"
+			if [ -n "${quality}" ] ; then
+				local opt=${cur:0:10}
+				COMPREPLY=( $opt$(compgen -W "${subopt}" -- ${quality}) )
+				return 0
+			fi
+		;;
+		"--tag="*)
+			local tag=${cur:6}
+			if [ -n "$(which konachan)" ] && [ -n "${tag}" ] ; then
+				local subopt=\"$(konachan -s -t "${tag}*" -T -p 0 --limit=10 -f "name")\"
+				local opt=${cur:0:6}
+				COMPREPLY=( $opt$(compgen -W "${subopt}" "${tag}") )
 				return 0
 			fi
 		;;
 		*)
 		;;
-	esac
-
-	if [[ ${cur} == --* ]] ; then
-		COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-		return 0
+		esac
 	fi
-}
-complete -F _kcwallpaper kcwallpaper
 
+	# Default generate compare of all available option.
+	COMPREPLY=( $(compgen -W "${opts}" -- "${cur}") )
+
+	# If there's only one option, without =, then allow a space
+	if [[ ${#COMPREPLY[@]} == 1 && ${COMPREPLY[0]} != "--"*"=" ]] ; then
+		compopt +o nospace
+	fi
+
+	return 0
+}
+
+complete -o nospace -F _kcwallpaper kcwallpaper
 
