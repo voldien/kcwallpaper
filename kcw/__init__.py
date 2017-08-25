@@ -17,7 +17,6 @@ import os
 import socket
 import subprocess
 
-import db
 import kcw.kcwreadoptions
 from kcwconfiguration import *
 from kcwlog import *
