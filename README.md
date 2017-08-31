@@ -2,7 +2,7 @@
 ---
 kcwallpaper is a wallpaper/slideshow program for displaying images from [konachan](https://konachan.net). It can be configured for what kind of behaviour the program should be running. 
 
-##Features##
+## Features ##
 * Caching - The downloaded content can be cached for next time displaying the image.
 * Configurable - The settings for the application can be configured with the *kcw.conf* file.
 * Overridable options - Attribute of the program can be altered with short and long options.
