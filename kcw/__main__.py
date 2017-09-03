@@ -14,6 +14,16 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from kcwallpaper import main
+from kcwlog import errorf
+import os
+from distutils.spawn import find_executable
 
-if __name__ == '__main__':
-    main()
+# Check if execution dependencies exists.
+utilprogdep = ["swp", "konachan"]
+for program in utilprogdep:
+    if not find_executable(program, os.environ['PATH'] + ":" + os.getcwd()):
+        errorf("Program '{}' does not exist, program will terminate.", program)
+        exit(0)
+else:
+    if __name__ == '__main__':
+        main()
