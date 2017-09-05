@@ -38,12 +38,13 @@ setup(
         'Development Status :: 4 - Beta',
         'Framework :: KCW',
         'Intended Audience :: End Users/Desktop',
-        'License :: OSI Approved ::  GNU General Public License v3 (GPLv3)',
+        'License :: OSI Approved :: GNU General Public License v3 (GPLv3)',
         'Operating System :: OS Independent',
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
-        'Programming Language :: Python :: SQL',
+        'Programming Language :: SQL',
+        'Topic :: Software Development :: Version Control :: Git'
     ],
 
 )
