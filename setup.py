@@ -14,8 +14,20 @@ if "install" in sys.argv[1]:
         if os.path.exists(existing_path):
             break
 
-version = __import__('kcw').get_version()
 
+def getSqliteDep(version):
+    """
+
+    :param version:
+    :return:
+    """
+    if sys.version_info[0] < 3:
+        return 'pysqlite'
+    else:
+        return ''
+
+# Get version of the module.
+version = __import__('kcw').get_version()
 EXCLUDE_FROM_PACKAGES = ['']
 
 setup(
@@ -30,8 +42,9 @@ setup(
     entry_points={'console_scripts': [
               'kcwallpaper = kcw.__main__:main'
           ]},
-    install_requires=['mysql', 'mysql-connector',
-                      'pysqlite',
+    install_requires=['mysql==0.0.1',
+                      'mysql-connector==2.1.4',
+                      getSqliteDep(sys.version_info[0]),
                       'urllib3'],
     zip_safe=False,
     classifiers=[
