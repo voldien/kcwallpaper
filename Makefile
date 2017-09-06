@@ -36,6 +36,9 @@ install : $(INSTALL_DEP)
 	$(PYTHONV) setup.py build
 	$(PYTHONV) setup.py install
 
+install_dep: install_swp_deps install_konachan_deps
+	@echo -n "Installed the program dependencies for kcwallpaper.\n"
+
 install_swp_deps :
 	$(MAKE) -C swp install CC=$(CC)
 
