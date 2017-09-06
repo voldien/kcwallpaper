@@ -1,32 +1,45 @@
 # kcwallpaper #
 ---
-kcwallpaper is a wallpaper/slideshow program for displaying images from [konachan](https://konachan.net). It can be configured for what kind of behaviour the program should be running. 
+The *kcwallpaper* program is a wallpaper/slide show program for displaying images from [konachan](https://konachan.net). It can be configured for alter the behaviour the program, such as time between image swap, using only local cache, don't cache and search tag. The *kcwallpaper* program was written for *python2.7*.
 
 ## Features ##
-* Caching - The downloaded content can be cached for next time displaying the image.
+* Caching - The downloaded content can be cached for next time displaying the same image, This is done with *SQL*.
 * Configurable - The settings for the application can be configured with the *kcw.conf* file.
-* Overridable options - Attribute of the program can be altered with short and long options.
-* SSL - The program can run with using SSL/TLS for creating secure connections between server and client over HTTP.
-* AutoComplete - The program support bash autocomplete for program options including tag autocomplete *iff* the *konachan* query program is install on the system. 
+* Override Options - The settings of the program can be altered with the short and long options.
+* SSL - The program can run with *SSL*/*TLS* in order to creating a secure connections between the server and the client over HTTP.
+* AutoComplete - The program support bash autocomplete for program options including tag autocomplete *iff* the *konachan* query program is install on the system.
 
 
-## Installation ##
-The program can be easily by invoking the following command.
+# Motivation #
+The motivation of this project is in order to create a light-weight image slide show for Anime/Manga related images. Where it can cache the images and meta data in order to increase the overall performance.
+
+The motivation of the project is to be able start the program from the command line easily with little effort as possible.
+
+# Installation #
+The following section cover how the install the kcwallpaper program onto the system using either the *GNU make*. The make can only be used for UNIX based system. Whereas the python approach can be installed on any platform that supports *python*. However it requires the ** to be installed on the system prior to installing the *kcwallpaper*.
+
+## GNU Make - UNIX only ##
+The program can be easily be installed by invoking the following command.
 ```
 make install
 ```
-It will ask if you wish to run the SQL init code for creating the tables, database and user for enabling the caching feature. This is optional.
+The make file prompt a question if you wish to run the SQL init code for creating the tables, database. This for adding support for caching feature. This is however optionally and its only when using *MySQL*, the *SQLite* implementation will handle this on its own.
 
+## Install via Python ##
+The following command will install the python dependencies and install the *kcw* module and create a program called *kcwallpaper*. Where the *kcwallpaper* will call the main function in the *kcw* module.
+```
+python setup.py install
+```
 
-## Usage ##
---------------
-Once the program has been installed successfully. The program can be invoked as followed.
+# Usage #
+
+Once the program has been installed successfully. The program can be invoked with the following command.
 ```bash
 kcwallpaper
 ```
 This will start the kcwallpaper program with its default options.
 
-The options in kcw.conf can be override with command line options, see for the following example.
+The options in the kcw.conf file can be override with the command line options, see for the following example.
 ```bash
 kcwallpaper -t "cat"
 ```
@@ -35,10 +48,13 @@ This will override the search tag cat. Remark that each search tag will be split
 kcwallpaper -t "short_hair cat"
 ```
 
+# Contributing #
+Please read the [CONTRIBUTING](CONTRIBUTING.md) for more details of how you can contribute.
 
 ## Dependencies ##
-----------------
-In order to run the program, the following Debian packages has to be installed.
+The following section cover the dependencies for Linux distributions using the Debian package system.
+
+In order to run the program, the following Debian packages is required.
 ```bash
 apt-get install python2.7 python-mysql.connector python-sqlite
 ```
@@ -47,6 +63,6 @@ In order to make the caching feature work the following Debian packages is neede
 apt-get install mysql-server
 ```
 
-## License ##
------
-This project is licensed under the GPL+3 License - see the [LICENSE](LICENSE) file for details
+# License #
+This project is licensed under the GPL+3 License - see the [LICENSE](LICENSE) file for details.
+
