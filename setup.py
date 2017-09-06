@@ -47,6 +47,7 @@ setup(
                       getSqliteDep(sys.version_info[0]),
                       'urllib3'],
     zip_safe=False,
+    data_files=[],
     classifiers=[
         'Development Status :: 4 - Beta',
         'Framework :: KCW',
@@ -58,6 +59,5 @@ setup(
         'Programming Language :: Python :: 2.7',
         'Programming Language :: SQL',
         'Topic :: Software Development :: Version Control :: Git'
-    ],
-
+    ]
 )
