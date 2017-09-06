@@ -13,7 +13,7 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import kcw.kcwlog
+import kcwlog
 config = {}
 
 
@@ -24,7 +24,7 @@ def config_set(key, v):
     :param v:
     """
     global config
-    kcw.kcwlog.debug_printf("Set ({},{})".format(key, v))
+    kcwlog.debug_printf("Set ({},{})".format(key, v))
     config[key] = v
 
 
@@ -35,5 +35,5 @@ def config_get(key):
     :return: value associated with the key if exists.
     """
     global config
-    kcw.kcwlog.debug_printf("Get ({})".format(key))
+    kcwlog.debug_printf("Get ({})".format(key))
     return config[key]

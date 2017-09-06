@@ -13,14 +13,20 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import sqlite3
-import time
 import os.path
+import sys
+import time
 
 from dbdef import *
-import kcw
-from kcw.kcwconfiguration import config_get
 from kcw.db.kcwsql import SqlCacheConnection
+from kcw.kcwconfiguration import config_get
+from kcw.kcwlog import errorf, verbose_printf
+
+#
+if sys.version_info[0] < 3:
+    import sqlite3
+else:
+    import _sqlite3 as sqlite3
 
 
 class SqliteCacheConnection (SqlCacheConnection):
@@ -42,10 +48,10 @@ class SqliteCacheConnection (SqlCacheConnection):
             cur.close()
             return res
         except sqlite3.DatabaseError as err:
-            kcw.errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
+            errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
             exit(1)
         except Exception as err:
-            kcw.errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
+            errorf("Failed perform query '{}'\n\terror : {}.\n", query, err.message)
         return ()
 
     def connect(self, user, password, host, port, database):
@@ -62,9 +68,9 @@ class SqliteCacheConnection (SqlCacheConnection):
             path = "{}/../kcwsqllite.db".format(config_get("cachedirectory"))
 
             if os.path.exists(path):
-                kcw.verbose_printf("Loading database at %s" % path)
+                verbose_printf("Loading database at %s" % path)
             else:
-                kcw.verbose_printf("Created database at %s" % path)
+                verbose_printf("Created database at %s" % path)
 
             self.connection = sqlite3.connect(database=path)
             self.schema = database
@@ -72,7 +78,7 @@ class SqliteCacheConnection (SqlCacheConnection):
             self.create_tables()
 
         except Exception as err:
-            kcw.errorf(err.message)
+            errorf(err.message)
 
     def disconnect(self):
         self.connection.close()

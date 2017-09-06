@@ -13,9 +13,15 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-import kcw
-import kcw.db
+from . import get_version
+from _kcw import SUPPORT_CONFIG_QUALIFIER, kc_array_args, QUALITY_CONSTANT
+from kcwsimpleparser import sp_parse_file
+from kcwconfiguration import config_set, config_get
+from kcwlog import *
+
+import db
 import getopt
+import argparse
 import sys
 import os
 
@@ -35,24 +41,24 @@ def read_first_pass():
     try:
         opts, args = getopt.getopt(sys.argv[1:], shortopt, longoptions)
     except getopt.GetoptError as err:
-        kcw.errorf(err.message)
+        errorf(err.message)
         exit(1)
 
     for o, a in opts:
         if o in ("-v", "--version"):
-            print("version %s" % kcw.VERSION)
+            print("version %s" % get_version())
             exit(0)
         elif o in ("-V", "--verbose"):
-            kcw.set_verbosity(kcw.KCW_VERBOSE)
-            kcw.verbose_printf("Enabled verbose.\n")
+            set_verbosity(KCW_VERBOSE)
+            verbose_printf("Enabled verbose.\n")
         elif o in ("-D", "--debug"):
-            kcw.verbose_printf("Enabled verbose.\n")
-            kcw.set_verbosity(kcw.KCW_DEBUG)
+            verbose_printf("Enabled verbose.\n")
+            set_verbosity(KCW_DEBUG)
         elif o in ("-Q", "--quite"):
-            kcw.set_verbosity(kcw.KCW_QUITE)
+            set_verbosity(KCW_QUITE)
         elif o in ("-c", "--config"):
             config_path = str(a)
-            kcw.verbose_printf("config file override to {}.".format(config_path))
+            verbose_printf("config file override to {}.".format(config_path))
 
 
 def read_config_file(config_path):
@@ -71,73 +77,73 @@ def read_config_file(config_path):
         raise ValueError("Configuration file path is not a file.")
 
     # Parse configuration file.
-    config_table, err = kcw.sp_parse_file(config_path)
+    config_table, err = sp_parse_file(config_path)
     if not config_table and err:
-        map(kcw.errorf, err)
+        map(errorf, err)
         exit(1)
 
     # Iterate through all of the attributes.
     for k, v in config_table.iteritems():
-        if k not in kcw.SUPPORT_CONFIG_QUALIFIER:
-            kcw.debug_printf("%s is not valid config qualifier.", k)
+        if k not in SUPPORT_CONFIG_QUALIFIER:
+            debug_printf("%s is not valid config qualifier.", k)
             continue
 
         # Check each possible key.
         if k == "usesql":
-            kcw.config_set("usesql", (v == 'True'))
-            kcw.verbose_printf("Using SQL feature.")
+            config_set("usesql", (v == 'True'))
+            verbose_printf("Using SQL feature.")
         elif k == "sql":
-            kcw.config_set("sql", v)
-            kcw.verbose_printf("Set sql to %s.", v)
+            config_set("sql", v)
+            verbose_printf("Set sql to %s.", v)
         elif k == "hostname":
-            kcw.config_set("hostname", v)
-            kcw.verbose_printf("hostname : {}.".format(v))
+            config_set("hostname", v)
+            verbose_printf("hostname : {}.".format(v))
         elif k == "port":
-            kcw.config_set("port", v)
-            kcw.verbose_printf("port : {}.".format(v))
+            config_set("port", v)
+            verbose_printf("port : {}.".format(v))
         elif k == "db":
-            kcw.config_set("db", v)
-            kcw.verbose_printf("DB set to {}.".format(v))
+            config_set("db", v)
+            verbose_printf("DB set to {}.".format(v))
         elif k == "dbtable":
-            kcw.config_set("sql_table", v)
-            kcw.verbose_printf("table set to {}".format(v))
+            config_set("sql_table", v)
+            verbose_printf("table set to {}".format(v))
         elif k == "username":
             username = v
-            kcw.config_set("sql_username", username)
-            kcw.verbose_printf("username : {}.".format(username))
+            config_set("sql_username", username)
+            verbose_printf("username : {}.".format(username))
         elif k == "password":
             password = v
-            kcw.config_set("sql_password", password)
-            kcw.verbose_printf("password : {}.".format(password))
+            config_set("sql_password", password)
+            verbose_printf("password : {}.".format(password))
         elif k == "sleep":
-            kcw.config_set("sleep", float(v))
-            kcw.verbose_printf("sleep : {} secs.".format(float(v)))
+            config_set("sleep", float(v))
+            verbose_printf("sleep : {} secs.".format(float(v)))
         elif k == "tag":
             tag = v
-            kcw.config_set("tag", tag)
-            kcw.verbose_printf("tag : {}.".format(tag))
+            config_set("tag", tag)
+            verbose_printf("tag : {}.".format(tag))
         elif k == "cachedata":
             cachedata = (v == 'True')
-            kcw.config_set("cachedata", cachedata)
-            kcw.verbose_printf("Caching status {}.".format(cachedata))
+            config_set("cachedata", cachedata)
+            verbose_printf("Caching status {}.".format(cachedata))
         elif k == "usecache":
             usecache = (v == 'True')
-            kcw.config_set("usecache", usecache)
-            kcw.verbose_printf("Using caching status {}".format(usecache))
+            config_set("usecache", usecache)
+            verbose_printf("Using caching status {}".format(usecache))
         elif k == "cachedir":
             cachedirectory = os.path.expanduser(v)
-            kcw.config_set("cachedirectory", cachedirectory)
-            kcw.verbose_printf("Cache directory set to {}".format(cachedirectory))
+            config_set("cachedirectory", cachedirectory)
+            verbose_printf("Cache directory set to {}".format(cachedirectory))
         elif k == "flag":
             flag = v
-            kcw.verbose_printf("flag : {}.".format(flag))
+            verbose_printf("flag : {}.".format(flag))
         elif k == "fifo":
             wallpaper_fifo = os.path.expanduser(v)
-            kcw.config_set("wallpaper_fifo", wallpaper_fifo)
-            kcw.verbose_printf("Wallpaper fifio set to {}.".format(wallpaper_fifo))
+            config_set("wallpaper_fifo", wallpaper_fifo)
+            verbose_printf("Wallpaper fifio set to {}.".format(wallpaper_fifo))
         elif k == "ssl":
             ssl = (v == "True")
-            kcw.verbose_printf("SSL set to {}".format(ssl))
+            verbose_printf("SSL set to {}".format(ssl))
         else:
             print ("%s is not a known configuration attribute.\n" % k)
 
@@ -167,54 +173,54 @@ def read_options(config_path):
     # Iterate through each option.
     for o, a in opts:
         if o in ("-t", "--tag"):
-            kcw.config_set("tag", a)
-            kcw.verbose_printf("Search tag override to {}.".format(a))
+            config_set("tag", a)
+            verbose_printf("Search tag override to {}.".format(a))
         elif o in ("-T", "--sleep"):
-            kcw.config_set("sleep", float(a))
-            kcw.verbose_printf("Sleep time override to {}.".format(float(a)))
+            config_set("sleep", float(a))
+            verbose_printf("Sleep time override to {}.".format(float(a)))
         elif o in "cachedir":
-            kcw.config_set("cachedirectory", os.path.expanduser(a))
-            kcw.verbose_printf("Cache directory override to {}.".format(os.path.expanduser(a)))
+            config_set("cachedirectory", os.path.expanduser(a))
+            verbose_printf("Cache directory override to {}.".format(os.path.expanduser(a)))
         elif o in ("-m", "--sql"):
-            kcw.config_set("sql", a)
+            config_set("sql", a)
         elif o in ("--fifo", "-F"):
-            kcw.config_set("wallpaper_fifo", a)
-            kcw.verbose_printf("FIFO override to {}".format(a))
+            config_set("wallpaper_fifo", a)
+            verbose_printf("FIFO override to {}".format(a))
         elif o in "--ssl":
-            kcw.config_set("ssl", a == "True")
+            config_set("ssl", a == "True")
         elif o in "--cacheonly":
-            kcw.config_set("cacheonly", True)
+            config_set("cacheonly", True)
         elif o == "--clear-cache":
-            kcw.verbose_printf("Clearing cache database.\n")
-            cachecon = kcw.db.create_sql_cache_connection(kcw.config_get("sql"))
+            verbose_printf("Clearing cache database.\n")
+            cachecon = db.create_sql_cache_connection(config_get("sql"))
             cachecon.connect(
-                kcw.config_get("sql_username"),
-                kcw.config_get("sql_password"),
-                kcw.config_get("sql_hostname"),
-                kcw.config_get("sql_port"),
-                kcw.config_get("sql_database"))
-            cachecon.clear_cache(kcw.config_get("sql_table"))
+                config_get("sql_username"),
+                config_get("sql_password"),
+                config_get("sql_hostname"),
+                config_get("sql_port"),
+                config_get("sql_database"))
+            cachecon.clear_cache(config_get("sql_table"))
             cachecon.disconnect()
             quit(0)
         elif o == "--clear-cache-img":
-            kcw.verbose_printf("Clearing image cache.\n")
-            cachedirectory = kcw.config_get("cachedirectory")
+            verbose_printf("Clearing image cache.\n")
+            cachedirectory = config_get("cachedirectory")
             lst = os.listdir(cachedirectory)
             for l in lst:
-                kcw.verbose_printf("Removing file from cache directory %s.\n" % l)
+                verbose_printf("Removing file from cache directory %s.\n" % l)
                 fpath = "%s/%s" % (cachedirectory, l)
                 os.remove(fpath)
             quit(0)
         elif o == "--random":
-            kcw.kc_array_args.append("--random")
+            kc_array_args.append("--random")
         elif o in ("--quality", "-q"):
-            if a in kcw.QUALITY_CONSTANT.keys():
-                kcw.config_set("quality", kcw.QUALITY_CONSTANT[a])
+            if a in QUALITY_CONSTANT.keys():
+                config_set("quality", QUALITY_CONSTANT[a])
             else:
-                kcw.config_set("quality", int(a))
-                kcw.verbose_printf("Quality set to %s" % kcw.config_get("quality"))
+                config_set("quality", int(a))
+                verbose_printf("Quality set to %s" % config_get("quality"))
 
         elif o in ("-A", "--advanced_konachan_flag"):
-            kcw.kc_array_args.append(a)
+            kc_array_args.append(a)
         else:
             pass
