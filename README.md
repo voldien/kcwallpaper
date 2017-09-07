@@ -20,7 +20,7 @@ The motivation of this project is in order to create a light-weight image slide 
 The motivation of the project is to be able start the program from the command line easily with little effort as possible.
 
 # Installation #
-The following section cover how the install the *kcwallpaper* program onto the system using either the *GNU make*. The make can only be used for UNIX based system. Whereas the python approach can be installed on any platform that supports *python*. However it requires the ** to be installed on the system prior to installing the *kcwallpaper*.
+The following section cover how the install the *kcwallpaper* program onto the system using either the *GNU make*. The make can only be used for UNIX based system. Whereas the python approach can be installed on any platform that supports *python*. However it requires the *python-setuptools* package to be installed on the system prior to installing the *kcwallpaper* program.
 
 ## GNU Make - UNIX only ##
 The program can be easily be installed by invoking the following command.
@@ -66,6 +66,18 @@ In order to make the caching feature work the following Debian packages is neede
 ```bash
 apt-get install mysql-server
 ```
+
+## Sub Program Dependencies ##
+
+The *kcwallpaper* has two additional program dependencies as mention in the first section, because they are not yet available as *Debian* packages. This can however be resolved easily be invoking the following command. Where git will clone the *swp* and *konachan* git repository to the current repository.
+```
+git submodule update
+```
+Where the program can either be installed by following instruction for both of the git repository individually. Otherwise the program can be easily be installed by using the following command:
+```
+make install_dep
+```
+The command will invoked the make in both *swp* and *konachan*.
 
 # License #
 This project is licensed under the GPL+3 License - see the [LICENSE](LICENSE) file for details.
