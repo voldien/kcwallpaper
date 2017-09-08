@@ -30,7 +30,8 @@ shortopt = "vVDmdt:T:h:P:p:c:F:s:rq:Q"
 
 # getopt long options.
 longoptions = ["version", "verbose", "debug", "quite", "tag=", "sleep=", "sql=", "config=", "cachedir=", "fifo=",
-               "clear-cache", "clear-cache-img", "ssl", "random", "quality=", "advanced_konachan_flag=", "cacheonly"]
+               "clear-cache", "clear-cache-img", "ssl", "random", "quality=", "advanced_konachan_flag=", "cacheonly",
+               "disable-cache"]
 
 
 def read_first_pass():
@@ -190,6 +191,10 @@ def read_options(config_path):
             config_set("ssl", a == "True")
         elif o in "--cacheonly":
             config_set("cacheonly", True)
+        elif o in "--disable-cache":
+            config_set("cacheonly", False)
+            config_set("usecache", False)
+            config_set("cachedata", False)
         elif o == "--clear-cache":
             verbose_printf("Clearing cache database.\n")
             cachecon = db.create_sql_cache_connection(config_get("sql"))
