@@ -33,6 +33,8 @@ def main():
     """
 
     swp = None
+    sqlcon = None
+
     # Read options.
     kcwreadoptions.read_options(DEFAULT_CONFIG_PATH)
 
@@ -78,7 +80,7 @@ def main():
         create_cache_directory(config_get("cachedirectory"))
 
     # Create mysql connection and connect. (Optional)
-    if config_get("use_sql"):
+    if config_get("use_sql") and (config_get("usecache") or config_get("cachedata")):
 
         try:
             sqlcon = db.create_sql_cache_connection(config_get("sql"))

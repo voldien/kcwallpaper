@@ -23,7 +23,8 @@ _kcwallpaper()
 	--random
 	--quality=
 	--advanced_konachan_flag=
-	--cacheonly"
+	--cacheonly
+	--disable-cache"
 
 	if [[ "${cur}" == "--"*"="* ]] ; then
 
