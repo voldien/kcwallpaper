@@ -189,9 +189,9 @@ def read_options(config_path):
             verbose_printf("FIFO override to {}".format(a))
         elif o in "--ssl":
             config_set("ssl", a == "True")
-        elif o in "--cacheonly":
+        elif o == "--cacheonly":
             config_set("cacheonly", True)
-        elif o in "--disable-cache":
+        elif o == "--disable-cache":
             config_set("cacheonly", False)
             config_set("usecache", False)
             config_set("cachedata", False)
