@@ -32,7 +32,7 @@ install : $(INSTALL_DEP)
 	./sqlinstall.sh
 	$(MKDIR)  $(INSTALL_ETC_LOCATION)
 	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
-	$(CP) kcwallpaper.bc $(INSTALL_ETC_LOCATION)/bash_completion.d
+	$(CP) kcwallpaper.bc $(INSTALL_LOCATION)/share/bash-completion/completions/kcwallpaper
 	$(PYTHONV) setup.py build
 	$(PYTHONV) setup.py install
 
