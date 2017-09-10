@@ -18,8 +18,8 @@ import abc
 
 class SqlCacheConnection(object):
     """
-    Abstract base class for SQL
-    connection
+    Abstract base class for the SQL
+    cache implementation.
     """
 
     def __init__(self):
