@@ -176,6 +176,14 @@ class SqlCacheConnection(object):
         """
         pass
 
+    @abc.abstractmethod
+    def alter_database(self):
+        """
+
+        :return:
+        """
+        raise NotImplementedError("Not implemented.")
+
     def get_querylist(self):
         """
         Get query format list.
