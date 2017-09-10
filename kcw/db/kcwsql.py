@@ -18,8 +18,8 @@ import abc
 
 class SqlCacheConnection(object):
     """
-    Abstract base class for SQL
-    connection
+    Abstract base class for the SQL
+    cache implementation.
     """
 
     def __init__(self):
@@ -169,11 +169,20 @@ class SqlCacheConnection(object):
     @abc.abstractmethod
     def init_query_commands(self):
         """
-        Create query command directory.
+        Create query command dictionary for
+        specific SQL dervied language.
         :return: non-empty list.
         :rtype: list
         """
         pass
+
+    @abc.abstractmethod
+    def alter_database(self):
+        """
+
+        :return:
+        """
+        raise NotImplementedError("Not implemented.")
 
     def get_querylist(self):
         """
