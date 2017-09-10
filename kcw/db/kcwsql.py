@@ -169,7 +169,8 @@ class SqlCacheConnection(object):
     @abc.abstractmethod
     def init_query_commands(self):
         """
-        Create query command directory.
+        Create query command dictionary for
+        specific SQL dervied language.
         :return: non-empty list.
         :rtype: list
         """
