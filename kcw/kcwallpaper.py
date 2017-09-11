@@ -169,6 +169,8 @@ def main():
         # Check if image exists and cache is enabled.
         if (config_get("usecache") and sqlcon.check_img_exists(config_get("sql_table"), imgid)) \
                 or (config_get("cacheonly") and config_get("usecache")):
+
+            # Check image exist by konachan image ID.
             if not config_get("cacheonly"):
                 cachefilename = sqlcon.get_cached_img_url_by_id(
                     config_get("sql_table"), imgid)
