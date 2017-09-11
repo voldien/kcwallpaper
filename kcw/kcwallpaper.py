@@ -17,7 +17,7 @@
 import atexit
 import signal
 import time
-import urllib3
+import urllib2 as urllib3
 
 import db
 import kcwreadoptions
@@ -212,7 +212,7 @@ def main():
                     response.close()
                     del response
 
-                except urllib3.URLError as err:
+                except Exception as err:
                     errorf(err.message)
                     continue
 
