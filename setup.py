@@ -26,8 +26,15 @@ def getSqliteDep(version):
     else:
         return ''
 
+
 # Get version of the module.
 version = __import__('kcw').get_version()
+symver = {"b", "a", "rc", "s"}
+for s in symver:
+    if s in version:
+        version = version.replace(s, ".")
+
+
 EXCLUDE_FROM_PACKAGES = ['']
 
 setup(
