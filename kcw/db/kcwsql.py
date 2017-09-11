@@ -113,7 +113,7 @@ class SqlCacheConnection(object):
         pass
 
     @abc.abstractmethod
-    def add_img_entry(self, table, url, preview, score, imgid, tags):
+    def add_img_entry(self, url, table, quality, score, imgid, tags):
         """
         Add image to sql.
         :param table:
