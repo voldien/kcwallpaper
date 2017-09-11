@@ -99,6 +99,13 @@ def main():
             config_set("cacheonly", False)
             sqlcon = None
 
+    # Check if there exist cache in respect to current setting.
+    if config_get("cacheonly"):
+        if sqlcon.num_cache_entries(config_get("sql_table"), config_get("tag"), config_get("quality")) == 0:
+            errorf("No cached data available for tag '{}' with quality : {}.\n", config_get("tag"),
+                   QUALITY_SQL_COLUMN[config_get("quality")])
+            exit(1)
+
     # Set http protocol.
     http_pro = URL_PROTOCOL_QUALIFIER[config_get("ssl")]
     kc_array_args.append(KONACHAN_SECURITY_FLAG[config_get("ssl")])
@@ -152,9 +159,6 @@ def main():
                 continue
 
             # The order which the output data is stdout.
-            url = extrline[0]
-            sample = extrline[1]
-            preview = extrline[2]
             score = extrline[3]
             imgid = extrline[4]
             tags = reduce(lambda a, x: a + " " + x, extrline[5:])
@@ -167,11 +171,10 @@ def main():
                 or (config_get("cacheonly") and config_get("usecache")):
             if not config_get("cacheonly"):
                 cachefilename = sqlcon.get_cached_img_url_by_id(
-                                                                        config_get("sql_table"), imgid)
+                    config_get("sql_table"), imgid)
             else:
                 cachefilename = sqlcon.get_cached_img_url_by_tag(config_get("sql_table"),
-                                                                 QUALITY_SQL_COLUMN[
-                                                                config_get("quality")],
+                                                                 config_get("quality"),
                                                                  config_get("tag"), i)
             # Check if failed fetch path.
             if not cachefilename:
@@ -228,7 +231,7 @@ def main():
 
                     # Add image and its attributes to database.
                     verbose_printf("Adding image to SQL database.\n")
-                    sqlcon.add_img_entry(config_get("sql_table"), basename, preview, score, imgid, tags)
+                    sqlcon.add_img_entry(config_get("sql_table"), basename, config_get("quality"), score, imgid, tags)
             #
             elif config_get("usecache"):
 

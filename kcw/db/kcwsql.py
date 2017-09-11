@@ -113,7 +113,7 @@ class SqlCacheConnection(object):
         pass
 
     @abc.abstractmethod
-    def add_img_entry(self, table, url, preview, score, imgid, tags):
+    def add_img_entry(self, url, table, quality, score, imgid, tags):
         """
         Add image to sql.
         :param table:
@@ -150,6 +150,19 @@ class SqlCacheConnection(object):
         :rtype: str
         """
         pass
+
+    def num_cache_entries(self, table, tag, quality):
+        """
+        
+        :param table:
+        :param tag:
+        :param quality:
+        :return:
+        """
+        if self.num_entries_by_table(table) == 0:
+            return 0
+
+        return super(SqlCacheConnection, self).num_cache_entries(table, tag, quality)
 
     def get_tag_sql_condition(self, tag):
         """
