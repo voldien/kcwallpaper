@@ -81,10 +81,10 @@ class MySqlCacheConnection (SqlCacheConnection):
 
         return next(iter(res or []), None)
 
-    def add_img_entry(self, table, url, preview, score, imgid, tags):
+    def add_img_entry(self, table, url, quality, score, imgid, tags):
 
         res = self.execute_command(SQL_FORMAT_QUERY_ADD_IMG_ENTRY.format(
-            table, url, preview, score, imgid, tags, time.time()))
+            table, url, quality, score, imgid, tags, time.time()))
 
         return next(iter(res or []), None)
 
@@ -97,7 +97,7 @@ class MySqlCacheConnection (SqlCacheConnection):
     def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
 
         res = self.execute_command(
-            SQL_FORMAT_QUERY_IMG_BY_TAG.format(col, table, self.get_tag_sql_condition(tag), offset))
+            SQL_FORMAT_QUERY_IMG_BY_TAG.format(table, self.get_tag_sql_condition(tag), col, offset))
 
         return next(iter(res or []), None)
 
@@ -118,7 +118,7 @@ class MySqlCacheConnection (SqlCacheConnection):
                                                          "VALUES (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\');")
         querylist.insert(SQL_FORMAT_GET_CACHED_IMAGE_URL, "SELECT url FROM %s LIMIT %d 1 ;")
         querylist.insert(SQL_FORMAT_QUERY_IMG_BY_IMGID, "SELECT url FROM {} WHERE sourceid='{}';")
-        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG, "SELECT {} FROM {} WHERE {} LIMIT 1 OFFSET {} ;")
+        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG, "SELECT url FROM {} WHERE {} AND quality='{}' LIMIT 1 OFFSET {} ;")
         querylist.insert(SQL_FORMAT_CREATE_TABLE, "CREATE TABLE IF NOT EXISTS `img` ("
                                                   "	`sourceid` INT NOT NULL,"
                                                   "	`url` BLOB NOT NULL,"
