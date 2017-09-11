@@ -153,11 +153,13 @@ class SqlCacheConnection(object):
 
     def num_cache_entries(self, table, tag, quality):
         """
-        
-        :param table:
-        :param tag:
-        :param quality:
-        :return:
+        Get number of cache entries stored in table
+        in respect to tag and quality.
+        :param table: sql table.
+        :param tag: sequence of tags
+        :param quality: quality, [0,3] -> (low, medium, high)
+        :return: number of cached entries.
+        :rtype: int
         """
         if self.num_entries_by_table(table) == 0:
             return 0
