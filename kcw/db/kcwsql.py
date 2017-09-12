@@ -118,7 +118,7 @@ class SqlCacheConnection(object):
         Add image to sql.
         :param table:
         :param url:
-        :param preview:
+        :param quality: quality from highest(0) to lowest(3)
         :param score:
         :param imgid:
         :param tags:
