@@ -118,7 +118,8 @@ class MySqlCacheConnection (SqlCacheConnection):
                                                          "VALUES (\'{}\',\'{}\',\'{}\',\'{}\',\'{}\',\'{}\');")
         querylist.insert(SQL_FORMAT_GET_CACHED_IMAGE_URL, "SELECT url FROM %s LIMIT %d 1 ;")
         querylist.insert(SQL_FORMAT_QUERY_IMG_BY_IMGID, "SELECT url FROM {} WHERE sourceid='{}';")
-        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG, "SELECT url FROM {} WHERE {} AND quality='{}' LIMIT 1 OFFSET {} ;")
+        querylist.insert(SQL_FORMAT_QUERY_IMG_BY_TAG,
+                         "SELECT url FROM {} WHERE {} AND quality='{}' LIMIT 1 OFFSET {} ;")
         querylist.insert(SQL_FORMAT_CREATE_TABLE, "CREATE TABLE IF NOT EXISTS `img` ("
                                                   "	`sourceid` INT NOT NULL,"
                                                   "	`url` BLOB NOT NULL,"
