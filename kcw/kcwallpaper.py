@@ -25,6 +25,7 @@ from _kcw import *
 from kcw.kcwconfiguration import config_get, config_set
 from kcwlog import *
 from kcwmisc import *
+from . import get_version
 
 
 def main():
@@ -62,6 +63,11 @@ def main():
 
     # Create wallpaper process for display pictures.
     verbose_printf("Starting wallpaper process.\n")
+
+    # Simple wallpaper command line.
+
+    swp_args = list(["swp", "--fullscreen", "-C"])
+    swp_args.append("--title=konachan wallpaper - {}".format(get_version()))
     swp_args.append("-p")
     swp_args.append(config_get("wallpaper_fifo"))
     # Display wallpaper verbose only in debug mode.

@@ -72,6 +72,3 @@ config_set("sql_table", "img")
 config_set("tag", DEFAULT_SEARCHTAG)
 config_set("sleep", DEFAULT_SLEEPTIME)
 config_set("quality", HIGH_QUALITY)
-
-# Simple wallpaper command line.
-swp_args = ["swp", "--fullscreen", "-C"]
