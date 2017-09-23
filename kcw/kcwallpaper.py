@@ -145,13 +145,13 @@ def main():
 
             # Fetch data from konachan program.
             kc_cmdf = get_kcw_cmd(i)
-            p = os.popen(kc_cmdf, 'r')
-
-            # Read output data.
             try:
-                output = p.readline()
+                pkonachan = subprocess.Popen(kc_cmdf, shell=True,
+                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                output, err = pkonachan.communicate()
             except IOError as err:
-                errorf(err.message)
+                verbose_printf("No Internet detected - Disabling stream.")
+                debug_printf("Failed read from konachan program : %s", err.message)
                 config_set("hasInternet", False)
                 continue
 
