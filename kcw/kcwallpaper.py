@@ -246,7 +246,8 @@ def main():
                 #
                 errorf("No internet connection.\n")
                 cachefilename = sqlcon.get_cached_img_url_by_tag(config_get("sql_table"),
-                                                                 config_get("tag"))
+                                                                 config_get("quality"),
+                                                                 config_get("tag"), i)
                 #
                 fpath = "{}/{}".format(config_get("cachedirectory"), cachefilename)
                 try:
