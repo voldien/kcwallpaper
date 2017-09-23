@@ -50,7 +50,8 @@ QUALITY_CONSTANT = {"low": LOW_QUALITY, "medium": MEDIUM_QUALITY, "high": HIGH_Q
 QUALITY_SQL_COLUMN = {LOW_QUALITY: "preview", MEDIUM_QUALITY: "sample", HIGH_QUALITY: "url"}
 
 # Konachan program option arguments.
-kc_array_args = ["konachan", "-S", "-f", "\"url sample preview score id tags\"", "-t \"%s\"", "-p %d", "--limit=1"]
+kc_array_args = ["konachan", "-S", "-f", "\"url sample preview score id tags\"", "-t", "\"%s\"", "-p", "%s",
+                 "--limit=1"]
 
 # Default initialization config Variables.
 config_set("ssl", True)
