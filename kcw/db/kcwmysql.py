@@ -94,18 +94,19 @@ class MySqlCacheConnection (SqlCacheConnection):
 
         return next(iter(res or []), None)
 
-    def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
+    def get_cached_img_url_by_tag(self, table, quality, tag, offset=0):
 
         res = self.execute_command(
-            SQL_FORMAT_QUERY_IMG_BY_TAG.format(table, self.get_tag_sql_condition(tag), col, offset))
+            SQL_FORMAT_QUERY_IMG_BY_TAG.format(table, self.get_tag_sql_condition(tag), quality, offset))
 
         return next(iter(res or []), None)
 
     def init_query_commands(self):
         """
-
-        :return:
-        :rtype
+        Create MySQL query command for each us the methods
+        from this object.
+        :return: command list.
+        :rtype: list
         """
         querylist = []
         querylist.insert(SQL_FORMAT_QUERY_TRUNCATE, "TRUNCATE TABLE konachan.{} ;")

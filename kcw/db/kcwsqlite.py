@@ -143,8 +143,10 @@ class SqliteCacheConnection (SqlCacheConnection):
 
     def init_query_commands(self):
         """
-
+        Create SQLite query command for each us the methods
+        from this object.
         :return:
+        :rtype list
         """
         querylist = []
         querylist.insert(SQL_FORMAT_QUERY_TRUNCATE, "DELETE FROM {} ;")

@@ -138,12 +138,12 @@ class SqlCacheConnection(object):
         pass
 
     @abc.abstractmethod
-    def get_cached_img_url_by_tag(self, table, col, tag, offset=0):
+    def get_cached_img_url_by_tag(self, table, quality, tag, offset=0):
         """
         Get cached image local directory path by the tag
         associated with the image.
         :param table: table to search on.
-        :param col:
+        :param quality: quality level from [0,n]
         :param tag: tags associated with image.
         :param offset: nth result.
         :return: non-empty string.
