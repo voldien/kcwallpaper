@@ -57,6 +57,8 @@ def main():
         if swp is not None:
             swp.kill()
 
+    socket.setdefaulttimeout(5)
+
     # Setup for making the program terminate properly.
     atexit.register(kill_child_ps)
     signal.signal(signal.SIGINT, catch_signal)
@@ -147,8 +149,10 @@ def main():
             kc_cmdf = get_kcw_cmd(i)
             try:
                 pkonachan = subprocess.Popen(kc_cmdf, shell=True,
-                                 stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+                                             stdout=subprocess.PIPE, stderr=subprocess.PIPE)
                 output, err = pkonachan.communicate()
+                if pkonachan.returncode != 0:
+                    config_set("hasInternet", False)
             except IOError as err:
                 verbose_printf("No Internet detected - Disabling stream.")
                 debug_printf("Failed read from konachan program : %s", err.message)
