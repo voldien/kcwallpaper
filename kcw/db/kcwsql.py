@@ -166,7 +166,8 @@ class SqlCacheConnection(object):
 
         return super(SqlCacheConnection, self).num_cache_entries(table, tag, quality)
 
-    def get_tag_sql_condition(self, tag):
+    @staticmethod
+    def get_tag_sql_condition(tag):
         """
         Create 'where' condition sequence
         for each of the individual tags.
