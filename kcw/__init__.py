@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 # Global constant variable.
-VERSION = "0.10rc0"
+VERSION = "0.10rc1"
 
 
 def get_version():
