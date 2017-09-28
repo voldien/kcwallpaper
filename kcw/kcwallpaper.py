@@ -17,7 +17,7 @@
 import atexit
 import signal
 import time
-import urllib2 as urllib3
+import sys
 
 import db
 import kcwreadoptions
@@ -26,6 +26,11 @@ from kcw.kcwconfiguration import config_get, config_set
 from kcwlog import *
 from kcwmisc import *
 from . import get_version
+
+if sys.version_info[0] == 2:
+    import urllib2 as urllib3
+else:
+    import urllib3
 
 
 def main():
