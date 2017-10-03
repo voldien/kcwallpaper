@@ -49,7 +49,7 @@ _kcwallpaper()
 		"--tag="*)
 			local tag=${cur:6}
 			if [ -n "$(which konachan)" ] && [ -n "${tag}" ] ; then
-				local subopt=\"$(konachan -s -t "${tag}*" -T -p 0 --limit=10 -f "name")\"
+				local subopt=\"$(konachan -s -t "${tag}*" -T -p 0 --limit=25 -f "name")\"
 				local opt=${cur:0:6}
 				COMPREPLY=( $opt$(compgen -W "${subopt}" "${tag}") )
 				return 0
