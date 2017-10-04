@@ -3,8 +3,8 @@
 # Versions
 MAJOR := 0
 MINOR := 10
-PATCH := 0
-STATE := b
+PATCH := 2
+STATE := rc
 VERSION := $(MAJOR).$(MINOR)$(STATE)$(PATCH)
 # Utilities.
 RM := rm -f
