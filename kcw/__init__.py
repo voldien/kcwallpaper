@@ -16,7 +16,7 @@
 from __future__ import absolute_import
 
 # Global constant variable.
-VERSION = "0.10rc0"
+VERSION = "0.10rc1"
 
 
 def get_version():
