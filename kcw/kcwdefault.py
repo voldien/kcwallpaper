@@ -18,16 +18,16 @@ import os
 from kcwconfiguration import config_set
 
 # Global constant variable.
-CONFIG_FIELPATH = "/etc/"
+CONFIG_FIELPATH = os.path.expanduser("~/.kcw")
 CONFIG_FIELNAME = "kcw.conf"
-DEFAULT_CONFIG_PATH = CONFIG_FIELPATH + CONFIG_FIELNAME
+DEFAULT_CONFIG_PATH = "{}/{}".format(CONFIG_FIELPATH, CONFIG_FIELNAME)
 DEFAULT_USECACHE = True
 DEFAULT_CACHEDATA = True
 DEFAULT_CACHEFILEDIRECTORY = os.path.expanduser("~/.kcw/cache")
 DEFAULT_SLEEPTIME = 10.0
 DEFAULT_SEARCHTAG = "cat"
 DEFAULT_USE_MYSQL = True
-DEFAULT_SQL_BIN = "mysql"
+DEFAULT_SQL_BIN = "sqlite"
 DEFAULT_MYSQL_PORT = 3389
 DEFAULT_MYSQL_HOSTNAME = "localhost"
 DEFAULT_MYSQL_USERNAME = "kcwadmin"
@@ -62,7 +62,7 @@ config_set("config_file", CONFIG_FIELPATH + CONFIG_FIELNAME)
 config_set("usecache", DEFAULT_USECACHE)
 config_set("cachedata", DEFAULT_CACHEDATA)
 config_set("cachedirectory", DEFAULT_CACHEFILEDIRECTORY)
-config_set("sql", "sqlite")
+config_set("sql", DEFAULT_SQL_BIN)
 config_set("use_sql", DEFAULT_USE_MYSQL)
 config_set("sql_database", 'konachan')
 config_set("sql_hostname", DEFAULT_MYSQL_HOSTNAME)

@@ -17,7 +17,7 @@ import os.path
 import sys
 import time
 
-from dbdef import *
+from kcw.db.dbdef import *
 from kcw.db.kcwsql import SqlCacheConnection
 from kcw.kcwconfiguration import config_get
 from kcw.kcwlog import errorf, verbose_printf

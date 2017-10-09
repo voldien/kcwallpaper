@@ -24,6 +24,19 @@ from kcwlog import verbose_printf, errorf
 REMOTE_SERVER = "google.com"
 
 
+def get_share_directory_path():
+    """
+    Get the directory where share kcwallpaper
+    is located
+    :return: absolute path.
+    :rtype: str
+    """
+    if "posix" in sys.platform:
+        return "/usr/share/kcwallpaper"
+    else:
+        return os.getcwd()
+
+
 def create_cache_directory(directory):
     """
     Create cache directory.
@@ -80,7 +93,7 @@ def write_fifo(wallpaper_fifo, pbuf):
     return nbytes
 
 
-def kcw_connection_wait():
+def connection_wait():
     """
     Wait in till the connection can access internet.
     :return:

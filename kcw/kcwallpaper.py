@@ -1,4 +1,3 @@
-#!/usr/bin/python2.7
 # script that performs all main logic for kcwallpaper
 # Copyright (C) 2017  Valdemar Lindberg
 #
@@ -17,15 +16,15 @@
 import atexit
 import signal
 import time
-import sys
+import shutil
 
-import db
+import kcw.db
 import kcwreadoptions
-from _kcw import *
+from kcwdefault import *
 from kcw.kcwconfiguration import config_get, config_set
-from kcwlog import *
-from kcwmisc import *
-from . import get_version
+from kcw.kcwlog import *
+from kcw.kcwmisc import *
+from kcw import get_version
 
 if sys.version_info[0] == 2:
     import urllib2 as urllib3
@@ -40,6 +39,11 @@ def main():
 
     swp = None
     sqlcon = None
+
+    # Check if the default configuration file exists.
+    if not os.path.exists(DEFAULT_CONFIG_PATH):
+        # Default file does not exist.
+        shutil.copy("{}/{}".format(get_share_directory_path(), CONFIG_FIELNAME), DEFAULT_CONFIG_PATH)
 
     # Read options.
     kcwreadoptions.read_options(DEFAULT_CONFIG_PATH)
@@ -96,7 +100,7 @@ def main():
     if config_get("use_sql") and (config_get("usecache") or config_get("cachedata")):
 
         try:
-            sqlcon = db.create_sql_cache_connection(config_get("sql"))
+            sqlcon = kcw.db.create_sql_cache_connection(config_get("sql"))
             sqlcon.connect(
                 config_get("sql_username"),
                 config_get("sql_password"),
@@ -129,7 +133,7 @@ def main():
     imgid = 0
     imgdata = None
     extrline = None
-    kc_cmd = reduce(lambda a, x: a + " " + x, kc_array_args)
+    kc_cmd = str(" ").join(kc_array_args)
 
     def compute_kc_cmd(j):
         return kc_cmd % (config_get("tag"), j)
@@ -176,7 +180,7 @@ def main():
             # The order which the output data is stdout.
             score = extrline[3]
             imgid = extrline[4]
-            tags = reduce(lambda a, x: a + " " + x, extrline[5:])
+            tags = " ".join(extrline[5:])
 
             # Get URL.
             fetchurl = extrline[abs(2 - config_get("quality"))]
@@ -269,7 +273,7 @@ def main():
             else:
                 errorf("No connection to server and cached disabled.\n")
                 errorf("Program will wait in till connection comes up again.\n")
-                while kcw_connection_wait():
+                while connection_wait():
                     time.sleep(2.0)
                 config_set("hasInternet", True)
 

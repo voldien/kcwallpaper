@@ -14,8 +14,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 from __future__ import absolute_import
-from . import kcwmysql
-from . import kcwsqlite
+from kcw.db import kcwmysql
+from kcw.db import kcwsqlite
 
 
 def create_sql_cache_connection(db):

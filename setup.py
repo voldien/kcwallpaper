@@ -15,10 +15,9 @@ if "install" in sys.argv[1]:
             break
 
 
-def getSqliteDep(version):
+def getSqliteDep():
     """
-
-    :param version:
+    Get SQLite dependency.
     :return:
     """
     if sys.version_info[0] < 3:
@@ -51,7 +50,7 @@ setup(
           ]},
     install_requires=['mysql==0.0.1',
                       'mysql-connector==2.1.4',
-                      getSqliteDep(sys.version_info[0]),
+                      getSqliteDep(), 'urllib2'
                       'urllib3'],
     zip_safe=False,
     data_files=[],

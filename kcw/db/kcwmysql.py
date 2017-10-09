@@ -15,7 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import mysql.connector
-import kcw._kcw
+from kcw.kcwlog import errorf
 from kcwsql import *
 from dbdef import *
 import time
@@ -40,7 +40,7 @@ class MySqlCacheConnection (SqlCacheConnection):
             cur.close()
             return res
         except mysql.connector.Error as err:
-            __kcw.errorf("Failed to perform query '{}'\n\terror : {}.\n", query, err.message)
+            errorf("Failed to perform query '{}'\n\terror : {}.\n", query, err.message)
             exit(1)
         return ()
 
