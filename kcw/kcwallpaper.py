@@ -21,7 +21,7 @@ import sys
 
 import db
 import kcwreadoptions
-from _kcw import *
+from kcwdefault import *
 from kcw.kcwconfiguration import config_get, config_set
 from kcwlog import *
 from kcwmisc import *
