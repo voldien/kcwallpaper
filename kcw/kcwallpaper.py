@@ -41,6 +41,11 @@ def main():
     swp = None
     sqlcon = None
 
+    # Check if the default configuration file exists.
+    if not os.path.exists(DEFAULT_CONFIG_PATH):
+        # Default file does not exist.
+        shutil.copy("{}/{}".format(get_share_directory_path(), CONFIG_FIELNAME), DEFAULT_CONFIG_PATH)
+
     # Read options.
     kcwreadoptions.read_options(DEFAULT_CONFIG_PATH)
 
