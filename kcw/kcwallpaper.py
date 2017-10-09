@@ -133,7 +133,7 @@ def main():
     imgid = 0
     imgdata = None
     extrline = None
-    kc_cmd = reduce(lambda a, x: a + " " + x, kc_array_args)
+    kc_cmd = str(" ").join(kc_array_args)
 
     def compute_kc_cmd(j):
         return kc_cmd % (config_get("tag"), j)
@@ -180,7 +180,7 @@ def main():
             # The order which the output data is stdout.
             score = extrline[3]
             imgid = extrline[4]
-            tags = reduce(lambda a, x: a + " " + x, extrline[5:])
+            tags = " ".join(extrline[5:])
 
             # Get URL.
             fetchurl = extrline[abs(2 - config_get("quality"))]
