@@ -269,7 +269,7 @@ def main():
             else:
                 errorf("No connection to server and cached disabled.\n")
                 errorf("Program will wait in till connection comes up again.\n")
-                while kcw_connection_wait():
+                while connection_wait():
                     time.sleep(2.0)
                 config_set("hasInternet", True)
 

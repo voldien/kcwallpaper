@@ -80,7 +80,7 @@ def write_fifo(wallpaper_fifo, pbuf):
     return nbytes
 
 
-def kcw_connection_wait():
+def connection_wait():
     """
     Wait in till the connection can access internet.
     :return:
