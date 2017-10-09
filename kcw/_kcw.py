@@ -18,9 +18,9 @@ import os
 from kcwconfiguration import config_set
 
 # Global constant variable.
-CONFIG_FIELPATH = "/etc/"
+CONFIG_FIELPATH = os.path.expanduser("~/.kcw")
 CONFIG_FIELNAME = "kcw.conf"
-DEFAULT_CONFIG_PATH = CONFIG_FIELPATH + CONFIG_FIELNAME
+DEFAULT_CONFIG_PATH = "{}/{}".format(CONFIG_FIELPATH, CONFIG_FIELNAME)
 DEFAULT_USECACHE = True
 DEFAULT_CACHEDATA = True
 DEFAULT_CACHEFILEDIRECTORY = os.path.expanduser("~/.kcw/cache")
