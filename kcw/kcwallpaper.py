@@ -19,13 +19,13 @@ import signal
 import time
 import sys
 
-import db
+import kcw.db
 import kcwreadoptions
 from kcwdefault import *
 from kcw.kcwconfiguration import config_get, config_set
-from kcwlog import *
-from kcwmisc import *
-from . import get_version
+from kcw.kcwlog import *
+from kcw.kcwmisc import *
+from kcw import get_version
 
 if sys.version_info[0] == 2:
     import urllib2 as urllib3
@@ -101,7 +101,7 @@ def main():
     if config_get("use_sql") and (config_get("usecache") or config_get("cachedata")):
 
         try:
-            sqlcon = db.create_sql_cache_connection(config_get("sql"))
+            sqlcon = kcw.db.create_sql_cache_connection(config_get("sql"))
             sqlcon.connect(
                 config_get("sql_username"),
                 config_get("sql_password"),
