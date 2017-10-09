@@ -66,6 +66,7 @@ def main():
         if swp is not None:
             swp.kill()
 
+    # Prevent urllib from I/O blocking forever.
     socket.setdefaulttimeout(5)
 
     # Setup for making the program terminate properly.
@@ -110,7 +111,7 @@ def main():
 
         except Exception as err:
             # Disable caching if connection fails.
-            errorf("Failed creating caching connection.\n\t {}.\n", err.message)
+            errorf("Failed creating SQL cache connection - Reversing back to streaming.\n\t {}.\n", err.message)
             config_set("cachedata", False)
             config_set("usecache", False)
             config_set("cacheonly", False)
