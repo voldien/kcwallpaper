@@ -1,4 +1,3 @@
-#!/usr/bin/python2.7
 # script that performs all main logic for kcwallpaper
 # Copyright (C) 2017  Valdemar Lindberg
 #
@@ -17,7 +16,7 @@
 import atexit
 import signal
 import time
-import sys
+import shutil
 
 import kcw.db
 import kcwreadoptions
