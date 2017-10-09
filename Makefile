@@ -30,8 +30,8 @@ INSTALL_DEP :=
 
 install : $(INSTALL_DEP)
 	./sqlinstall.sh
-	$(MKDIR)  $(INSTALL_ETC_LOCATION)
-	$(CP) kcw.conf $(INSTALL_ETC_LOCATION)
+	$(MKDIR) $(INSTALL_LOCATION)/share/kcwallpaper
+	$(CP) kcw.conf $(INSTALL_LOCATION)/share/kcwallpaper
 	$(CP) kcwallpaper.bc $(INSTALL_LOCATION)/share/bash-completion/completions/kcwallpaper
 	$(PYTHONV) setup.py build
 	$(PYTHONV) setup.py install
