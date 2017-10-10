@@ -22,7 +22,8 @@ from kcw.db.kcwsql import SqlCacheConnection
 from kcw.kcwconfiguration import config_get
 from kcw.kcwlog import errorf, verbose_printf
 
-#
+# Import sqlite differently based on
+# the python version.
 if sys.version_info[0] < 3:
     import sqlite3
 else:

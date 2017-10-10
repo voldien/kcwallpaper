@@ -14,17 +14,17 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import atexit
+import shutil
 import signal
 import time
-import shutil
 
 import kcw.db
 import kcwreadoptions
-from kcwdefault import *
+from kcw import get_version
 from kcw.kcwconfiguration import config_get, config_set
 from kcw.kcwlog import *
 from kcw.kcwmisc import *
-from kcw import get_version
+from kcwdefault import *
 
 if sys.version_info[0] == 2:
     import urllib2 as urllib3
