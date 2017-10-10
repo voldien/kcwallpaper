@@ -18,7 +18,7 @@ import sys
 import socket
 import subprocess
 
-from kcwlog import verbose_printf, errorf
+from kcw.kcwlog import verbose_printf, errorf
 
 # FQDN for checking internet connection.
 REMOTE_SERVER = "google.com"

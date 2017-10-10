@@ -13,17 +13,16 @@
 #
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
-from kcw import get_version
-from kcwdefault import SUPPORT_CONFIG_QUALIFIER, kc_array_args, QUALITY_CONSTANT
-from kcwsimpleparser import sp_parse_file
-from kcwconfiguration import config_set, config_get
-from kcwlog import *
-
-import db
 import getopt
-import argparse
-import sys
 import os
+import sys
+
+import kcw.db
+from kcw import get_version
+from kcw.kcwconfiguration import config_set, config_get
+from kcw.kcwdefault import SUPPORT_CONFIG_QUALIFIER, kc_array_args, QUALITY_CONSTANT
+from kcw.kcwlog import *
+from kcw.kcwsimpleparser import sp_parse_file
 
 # getopt short options.
 shortopt = "vVDmdt:T:h:P:p:c:F:s:rq:Q"
