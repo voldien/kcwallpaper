@@ -57,7 +57,7 @@ kc_array_args = ["konachan", "-S", "-f", "\"url sample preview score id tags\"",
 config_set("ssl", True)
 config_set("hasInternet", True)
 config_set("cacheonly", False)
-config_set("wallpaper_fifo", os.path.expanduser("~/.kcw/wallfifo0"))
+config_set("wallpaper_fifo", "{}-{}".format(os.path.expanduser("~/.kcw/wallfifo"), os.getpid()))
 config_set("config_file", CONFIG_FIELPATH + CONFIG_FIELNAME)
 config_set("usecache", DEFAULT_USECACHE)
 config_set("cachedata", DEFAULT_CACHEDATA)
