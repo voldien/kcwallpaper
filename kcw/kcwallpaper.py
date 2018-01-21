@@ -55,6 +55,7 @@ def main():
                 sqlcon.disconnect()
             if swp:
                 swp.kill()
+            os.remove(config_get("wallpaper_fifo"))
             quit(0)
         if sig is signal.SIGCHLD:
             errorf("Child process terminated.\n")
