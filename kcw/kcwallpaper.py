@@ -218,12 +218,17 @@ def main():
                 errorf(err.message)
 
         else:
+            debug_printf("Image not cached.\n")
+
+            # Load image from internet.
             if config_get("hasInternet"):
                 try:
+
                     # Create URL string.
                     url = "{}://www.{}".format(http_pro, fetchurl)
                     # basename for the image file.
-                    basename = os.path.basename(url).decode().replace("%20", " ")
+                    basename = os.path.basename(url).decode().replace("%20", " ").\
+                        replace("https://", "").replace("http://", "")
                     # Create connection.
                     response = urllib3.urlopen(url)
                     # Download all data.
