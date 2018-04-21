@@ -9,7 +9,7 @@ python:
 
 # Install latest konachan and swp program.
 before_install:
-  - git submodule update 
+  - git submodule init && git submodule update 
   - mkdir swp/build && cd swp/build
   - cmake ..
   - cmake --build .
