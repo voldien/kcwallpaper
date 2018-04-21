@@ -5,9 +5,12 @@ python:
   - "3.4"
   - "3.5"
   - "3.6"
+  - "3.7"
 
+# Install latest konachan and swp program.
 before_install:
   - git submodule update 
 
+# Install dependices 
 install:
   - pip install .
