@@ -1,6 +1,7 @@
 # kcwallpaper #
 ---
 [![Travis Build Status](https://travis-ci.org/voldien/kcwallpaper.svg?branch=master)](https://travis-ci.org/voldien/kcwallpaper)
+
 The *kcwallpaper* program is a wallpaper/slide show program for displaying images from [konachan.net](https://konachan.net) (Anime/Manga). It can be configured for alter the behaviour of the program, such as time between image swap, using only local cache, don't cache, search tag and etc.
 
 The *kcwallpaper* program was written towards *python2.7*. However, *python3.5* is in progress for adding support for .
