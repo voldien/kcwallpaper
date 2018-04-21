@@ -10,7 +10,21 @@ python:
 # Install latest konachan and swp program.
 before_install:
   - git submodule update 
+  - mkdir swp/build && cd swp/build
+  - cmake ..
+  - cmake --build .
+  - ctest -VV
+  - mkdir konachan/build && cd konachan/build
+  - cmake ..
+  - cmake --build .
+  - ctest -VV
+  - cmake sw
 
-# Install dependices 
+addons:
+  apt:
+    packages:
+      - cmake
+
+# Install dependencies.
 install:
   - pip install .
