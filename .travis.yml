@@ -17,6 +17,13 @@ addons:
     packages:
       - cmake
 
-# Install dependencies.
+# Install swp and konachan dependencies.
+before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install -y libfreeimage-dev libsdl2-dev  openssl-dev json-c-dev
+
+# Install python dependencies.
 install:
   - pip install .
+  - python setup.py build
+  - python setup.py install
