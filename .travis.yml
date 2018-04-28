@@ -7,27 +7,27 @@ python:
   - "3.6"
   - "3.7"
 
-# Install latest konachan and swp program.
-before_install:
-  - git submodule init && git submodule update
-  - make install_dep
-
 addons:
   apt:
     packages:
-      - cmake
+      - make
 
-# Install swp and konachan dependencies.
-before_script:
+# Install latest konachan and swp program.
+before_install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -qq
   - sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev
   - sudo apt-get install -y libfreeimage-dev libsdl2-dev libssl-dev libjson0-dev
 
-# Install python dependencies.
 install:
+  - git submodule init && git submodule update
+  - make install_dep
   - pip install .
+
+# Install swp and konachan dependencies.
+before_script:
   - python setup.py build
 
+# Install python dependencies.
 script:
   - python setup.py install
