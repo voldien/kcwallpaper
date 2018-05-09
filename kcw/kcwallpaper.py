@@ -55,6 +55,7 @@ def main():
                 sqlcon.disconnect()
             if swp:
                 swp.kill()
+            os.remove(config_get("wallpaper_fifo"))
             quit(0)
         if sig is signal.SIGCHLD:
             errorf("Child process terminated.\n")
@@ -184,7 +185,8 @@ def main():
             tags = " ".join(extrline[5:])
 
             # Get URL.
-            fetchurl = extrline[abs(2 - config_get("quality"))]
+            fetchurl = extrline[abs(2 - config_get("quality"))].replace("%20", " ").\
+                        replace("https://", "").replace("http://", "")
 
         # Check if image exists and cache is enabled.
         if (config_get("usecache") and sqlcon.check_img_exists(config_get("sql_table"), imgid)) \
@@ -217,12 +219,16 @@ def main():
                 errorf(err.message)
 
         else:
+            debug_printf("Image not cached.\n")
+
+            # Load image from internet.
             if config_get("hasInternet"):
                 try:
+
                     # Create URL string.
                     url = "{}://www.{}".format(http_pro, fetchurl)
                     # basename for the image file.
-                    basename = os.path.basename(url).decode().replace("%20", " ")
+                    basename = os.path.basename(url).decode()
                     # Create connection.
                     response = urllib3.urlopen(url)
                     # Download all data.
