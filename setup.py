@@ -26,13 +26,6 @@ def getSqliteDep():
         return ''
 
 
-def geturllibdep():
-    if sys.version_info[0] < 3:
-        return 'urllib2'
-    else:
-        return 'urllib3'
-
-
 # Get version of the module.
 version = __import__('kcw').get_version()
 symver = {"b", "a", "rc", "s"}
@@ -57,7 +50,8 @@ setup(
           ]},
     install_requires=['mysql==0.0.1',
                       'mysql-connector==2.1.4',
-                      getSqliteDep(), geturllibdep()],
+                      'urllib3;python_version>"3.0"',
+                      getSqliteDep()],
     zip_safe=False,
     data_files=[],
     classifiers=[
