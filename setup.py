@@ -48,7 +48,7 @@ setup(
     entry_points={'console_scripts': [
               'kcwallpaper = kcw.__main__:main'
           ]},
-    install_requires=['mysql==0.0.1',
+    install_requires=['mysql==0.0.1;python_version<"3.0"',
                       'mysql-connector==2.1.4',
                       'urllib3;python_version>"3.0"',
                       getSqliteDep()],
@@ -63,6 +63,7 @@ setup(
         'Natural Language :: English',
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
+        'Programming Language :: Python :: 3.5',
         'Programming Language :: SQL',
         'Topic :: Software Development :: Version Control :: Git'
     ]
